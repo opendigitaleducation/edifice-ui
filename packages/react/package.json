@@ -61,7 +61,14 @@
     "react-dom": "18.2.0",
     "react-hot-toast": "2.4.1",
     "react-i18next": "13.0.1",
-    "swiper": "10.0.3"
+    "swiper": "10.0.3",
+    "@tiptap/extension-color": "^2.0.4",
+    "@tiptap/extension-highlight": "^2.0.4",
+    "@tiptap/extension-text-style": "^2.0.4",
+    "@tiptap/extension-underline": "^2.0.4",
+    "@tiptap/pm": "^2.0.4",
+    "@tiptap/react": "^2.0.4",
+    "@tiptap/starter-kit": "^2.0.4"
   },
   "peerDependencies": {
     "@edifice-ui/icons": "*",

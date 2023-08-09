@@ -2,7 +2,6 @@ import { Meta, StoryObj } from "@storybook/react";
 
 import { Button } from "../Button";
 import ActionBar, { ActionBarProps } from "./ActionBar";
-import React from "react";
 
 const meta: Meta<typeof ActionBar> = {
   title: "Components/ActionBar",

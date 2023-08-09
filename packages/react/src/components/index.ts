@@ -19,6 +19,7 @@ export * from "./LoadingScreen";
 export * from "./Logo";
 export * from "./Modal";
 export * from "./Popover";
+export * from "./Toolbar";
 export * from "./Tooltip";
 export * from "./TreeView";
 export * from "./VisuallyHidden";
