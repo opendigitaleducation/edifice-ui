@@ -20,7 +20,7 @@ export interface BaseProps {
 }
 
 type AppVariants = "square" | "circle" | "rounded";
-type SquareVariant = Extract<AppVariants, { type: "square" }>;
+type SquareVariant = Extract<AppVariants, "square">;
 
 export type Props =
   | {

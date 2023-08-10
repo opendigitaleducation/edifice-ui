@@ -56,7 +56,6 @@ const meta: Meta<typeof Toolbar> = {
       },
     ],
   },
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
 };
 
 export default meta;
@@ -65,13 +64,6 @@ type Story = StoryObj<typeof Toolbar>;
 
 export const Base: Story = {
   render: (args) => <Toolbar {...args} />,
-};
-
-export const Empty: Story = {
-  render: (args) => <Toolbar {...args} />,
-  args: {
-    data: [],
-  },
 };
 
 export const WithDivider: Story = {
@@ -124,6 +116,41 @@ export const WithPrimaryAction: Story = {
         icon: <Write />,
         label: "write",
         name: "write",
+      },
+      {
+        action: () => console.log("on click"),
+        icon: <Plus />,
+        label: "plus",
+        name: "plus",
+        type: "primary",
+      },
+    ],
+  },
+};
+
+export const WithDropdownAction: Story = {
+  render: (args) => <Toolbar {...args} />,
+  decorators: [(Story) => <div style={{ height: "300px" }}>{Story()}</div>],
+  args: {
+    data: [
+      {
+        action: () => console.log("on click"),
+        icon: <Save />,
+        label: "save",
+        name: "save",
+      },
+      {
+        action: () => console.log("on click"),
+        icon: <Write />,
+        label: "write",
+        name: "write",
+        hasDropdown: true,
+        content: () => (
+          <div>
+            <div onClick={() => console.log("click 1")}>Write something...</div>
+            <div onClick={() => console.log("click 2")}>Edit something...</div>
+          </div>
+        ),
       },
       {
         action: () => console.log("on click"),
@@ -197,6 +224,42 @@ export const WithoutShadowButPrimaryAction: Story = {
         icon: <Write />,
         label: "write",
         name: "write",
+      },
+      {
+        action: () => console.log("on click"),
+        icon: <Plus />,
+        label: "plus",
+        name: "plus",
+        type: "primary",
+      },
+    ],
+  },
+};
+
+export const WithoutShadowDropdownAction: Story = {
+  render: (args) => <Toolbar {...args} />,
+  decorators: [(Story) => <div style={{ height: "300px" }}>{Story()}</div>],
+  args: {
+    variant: "no-shadow",
+    data: [
+      {
+        action: () => console.log("on click"),
+        icon: <Save />,
+        label: "save",
+        name: "save",
+      },
+      {
+        action: () => console.log("on click"),
+        icon: <Write />,
+        label: "write",
+        name: "write",
+        hasDropdown: true,
+        content: () => (
+          <div>
+            <div onClick={() => console.log("click 1")}>Write something...</div>
+            <div onClick={() => console.log("click 2")}>Edit something...</div>
+          </div>
+        ),
       },
       {
         action: () => console.log("on click"),

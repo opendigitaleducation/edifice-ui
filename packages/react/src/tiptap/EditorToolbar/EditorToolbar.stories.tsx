@@ -1,10 +1,4 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { useEditor } from "@tiptap/react";
-import Highlight from "@tiptap/extension-highlight";
-import Underline from "@tiptap/extension-underline";
-import StarterKit from "@tiptap/starter-kit";
-import EditorToolbar from "./EditorToolbar";
-import { useState } from "react";
 import Toolbar from "../../components/Toolbar/Toolbar";
 import {
   AlignLeft,
@@ -24,9 +18,119 @@ import {
   TextUnderline,
 } from "@edifice-ui/icons";
 
-const meta: Meta<typeof EditorToolbar> = {
+const data = [
+  {
+    action: () => console.log("on click"),
+    icon: <Landscape />,
+    label: "image",
+    name: "image",
+    className: "widget-image",
+  },
+  {
+    action: () => console.log("on click"),
+    icon: <RecordVideo />,
+    label: "video",
+    name: "video",
+    className: "widget-video",
+  },
+  {
+    action: () => console.log("on click"),
+    icon: <Mic />,
+    label: "audio",
+    name: "audio",
+    className: "widget-audio",
+  },
+  {
+    action: () => console.log("on click"),
+    icon: <Attachment />,
+    label: "attachment",
+    name: "attachment",
+    className: "widget-attachment",
+  },
+  {
+    type: "divider",
+  },
+  {
+    action: () => console.log("on click"),
+    icon: <TextTypo />,
+    label: "typo",
+    name: "typo",
+  },
+  {
+    action: () => console.log("on click"),
+    icon: <TextSize />,
+    label: "size",
+    name: "size",
+  },
+  {
+    action: () => console.log("on click"),
+    icon: <TextColor />,
+    label: "color",
+    name: "color",
+  },
+  {
+    action: () => console.log("on click"),
+    icon: <TextHighlight />,
+    label: "highlight",
+    name: "highlight",
+  },
+  {
+    type: "divider",
+  },
+  {
+    action: () => console.log("on click"),
+    icon: <TextBold />,
+    label: "bold",
+    name: "bold",
+    isActive: false,
+  },
+  {
+    action: () => console.log("on click"),
+    icon: <TextItalic />,
+    label: "italic",
+    name: "italic",
+  },
+  {
+    action: () => console.log("on click"),
+    icon: <TextUnderline />,
+    label: "underline",
+    name: "underline",
+  },
+  {
+    type: "divider",
+  },
+  {
+    action: () => console.log("on click"),
+    icon: <Smiley />,
+    label: "emoji",
+    name: "emoji",
+  },
+  {
+    action: () => console.log("on click"),
+    icon: <Link />,
+    label: "linker",
+    name: "linker",
+  },
+  {
+    type: "divider",
+  },
+  {
+    action: () => console.log("on click"),
+    icon: <BulletList />,
+    label: "list",
+    name: "list",
+  },
+  {
+    action: () => console.log("on click"),
+    icon: <AlignLeft />,
+    label: "alignment",
+    name: "alignment",
+  },
+];
+
+const meta: Meta<typeof Toolbar> = {
   title: "Tiptap/EditorToolbar",
-  component: EditorToolbar,
+  component: Toolbar,
   parameters: {
     docs: {
       description: {
@@ -46,130 +150,18 @@ const meta: Meta<typeof EditorToolbar> = {
     },
   },
   args: {
-    data: [
-      {
-        action: () => console.log("on click"),
-        icon: <Landscape />,
-        label: "image",
-        name: "image",
-        className: "widget-image",
-      },
-      {
-        action: () => console.log("on click"),
-        icon: <RecordVideo />,
-        label: "video",
-        name: "video",
-        className: "widget-video",
-      },
-      {
-        action: () => console.log("on click"),
-        icon: <Mic />,
-        label: "audio",
-        name: "audio",
-        className: "widget-audio",
-      },
-      {
-        action: () => console.log("on click"),
-        icon: <Attachment />,
-        label: "attachment",
-        name: "attachment",
-        className: "widget-attachment",
-      },
-      {
-        type: "divider",
-      },
-      {
-        action: () => console.log("on click"),
-        icon: <TextTypo />,
-        label: "typo",
-        name: "typo",
-      },
-      {
-        action: () => console.log("on click"),
-        icon: <TextSize />,
-        label: "size",
-        name: "size",
-      },
-      {
-        action: () => console.log("on click"),
-        icon: <TextColor />,
-        label: "color",
-        name: "color",
-      },
-      {
-        action: () => console.log("on click"),
-        icon: <TextHighlight />,
-        label: "highlight",
-        name: "highlight",
-      },
-      {
-        type: "divider",
-      },
-      {
-        action: () => console.log("on click"),
-        icon: <TextBold />,
-        label: "bold",
-        name: "bold",
-      },
-      {
-        action: () => console.log("on click"),
-        icon: <TextItalic />,
-        label: "italic",
-        name: "italic",
-      },
-      {
-        action: () => console.log("on click"),
-        icon: <TextUnderline />,
-        label: "underline",
-        name: "underline",
-      },
-      {
-        type: "divider",
-      },
-      {
-        action: () => console.log("on click"),
-        icon: <Smiley />,
-        label: "emoji",
-        name: "emoji",
-      },
-      {
-        action: () => console.log("on click"),
-        icon: <Link />,
-        label: "linker",
-        name: "linker",
-      },
-      {
-        type: "divider",
-      },
-      {
-        action: () => console.log("on click"),
-        icon: <BulletList />,
-        label: "list",
-        name: "list",
-      },
-      {
-        action: () => console.log("on click"),
-        icon: <AlignLeft />,
-        label: "alignment",
-        name: "alignment",
-      },
-    ],
+    data,
     variant: "no-shadow",
   },
+  decorators: [(Story) => <div style={{ height: "600px" }}>{Story()}</div>],
 };
 
 export default meta;
 
-type Story = StoryObj<typeof EditorToolbar>;
+type Story = StoryObj<typeof Toolbar>;
 
 export const Base: Story = {
   render: (args) => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    /* const editor = useEditor({
-      extensions: [StarterKit, Highlight, Underline],
-    }); */
-
     return <Toolbar {...args} />;
   },
 };

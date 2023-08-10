@@ -44,7 +44,7 @@ const DropdownTrigger = forwardRef(
       state,
       variant,
       icon,
-      size = "lg",
+      size = "md",
       grow = false,
       badgeContent,
       ...props

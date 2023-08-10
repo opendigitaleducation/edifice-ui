@@ -70,6 +70,7 @@ const Dropdown = ({ trigger, content }: DropdownProps) => {
   return (
     <>
       {clonedTrigger}
+
       {transition((style, visible) => (
         <>
           {visible && (

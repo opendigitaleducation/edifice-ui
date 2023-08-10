@@ -79,9 +79,7 @@ const SelectList = ({
             key={option.value}
             className={clsx(
               "select-list-option",
-              hideCheckbox &&
-                localModel.includes(option.value) &&
-                "text-secondary fw-bold",
+              hideCheckbox && localModel.includes(option.value) && "fw-bold",
             )}
             role="checkbox"
             aria-checked={localModel.includes(option.value)}

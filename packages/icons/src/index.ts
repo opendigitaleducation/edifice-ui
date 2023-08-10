@@ -98,6 +98,7 @@ export { default as Subscript } from "./Subscript";
 export { default as SuccessFill } from "./SuccessFill";
 export { default as SuccessOutline } from "./SuccessOutline";
 export { default as Superscript } from "./Superscript";
+export { default as Table } from "./Table";
 export { default as TextBold } from "./TextBold";
 export { default as TextColor } from "./TextColor";
 export { default as TextHighlight } from "./TextHighlight";
