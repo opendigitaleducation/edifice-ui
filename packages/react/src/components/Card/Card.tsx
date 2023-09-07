@@ -1,42 +1,24 @@
-import React, { ComponentPropsWithRef, forwardRef, Ref } from "react";
+import React, {
+  ComponentPropsWithRef,
+  forwardRef,
+  ReactNode,
+  Ref,
+  useMemo,
+} from "react";
 
-import { Files, Globe, Options, Users } from "@edifice-ui/icons";
-import { OneProfile } from "@edifice-ui/icons/nav";
+import { Options } from "@edifice-ui/icons";
 import clsx from "clsx";
 import { IWebApp } from "edifice-ts-client";
 
-import useOdeIcons from "../../core/useOdeIcons/useOdeIcons";
-import { AppIcon } from "../AppIcon";
-import { Avatar } from "../Avatar";
+import { CardContext } from "./CardContext";
+import { useOdeIcons } from "../../core";
 import { IconButton } from "../Button";
-import { Image } from "../Image";
-import { Tooltip } from "../Tooltip";
 
 export interface CardProps extends ComponentPropsWithRef<"div"> {
   /**
    * To show the icon of an application
    */
   app?: IWebApp;
-  /**
-   * Person who created resource
-   * */
-  creatorName?: string;
-  /**
-   * Name of resource or Folder
-   * */
-  name?: string;
-  /**
-   * Updated time
-   */
-  updatedAt?: string;
-  /**
-   * Shared number
-   */
-  people?: string;
-  /**
-   * Display Card as Folder
-   */
-  isFolder?: boolean;
   /**
    * Show selected Card
    */
@@ -46,14 +28,6 @@ export interface CardProps extends ComponentPropsWithRef<"div"> {
    */
   isAnimated?: boolean;
   /**
-   * Show icon if resource is shared
-   */
-  isShared?: boolean;
-  /**
-   * Show icon if resource is public
-   */
-  isPublic?: boolean;
-  /**
    * Skeleton Card
    * */
   isLoading?: boolean;
@@ -62,29 +36,22 @@ export interface CardProps extends ComponentPropsWithRef<"div"> {
    */
   className?: string;
   /**
-   * If Resource has image, `src` props shows the image
-   */
-  resourceSrc?: string;
+   * Name of resource or Folder
+   * */
+  name?: string;
   /**
-   * User Image Profile
+   * Link or text to display
    */
-  userSrc?: string;
-  /**
-   * Action to open a single resource
-   */
-  onOpen?: () => void;
+  children: ReactNode;
   /**
    * Select Card and Open ActionBar
    */
   onSelect?: () => void;
   /**
-   * Message tooltip icon Public
+   * Action to open a single resource
    */
-  messagePublic?: string;
-  /**
-   * Message tooltip icon Shared
-   */
-  messageShared?: string;
+  onOpen?: () => void;
+  imageSrc?: string;
 }
 
 const Card = forwardRef(
@@ -92,21 +59,14 @@ const Card = forwardRef(
     {
       app,
       className,
-      creatorName = "tom.mate",
       isAnimated = false,
-      isFolder = false,
       isLoading = false,
       isSelected = false,
-      isShared = false,
-      isPublic = false,
-      name = "Resource",
-      resourceSrc = "",
-      updatedAt = "2 days ago",
-      userSrc = "",
-      onOpen,
+      children,
       onSelect,
-      messagePublic,
-      messageShared,
+      onOpen,
+      name = "Resource",
+      imageSrc,
       ...restProps
     }: CardProps,
     ref: Ref<HTMLDivElement>,
@@ -123,17 +83,6 @@ const Card = forwardRef(
       className,
     );
 
-    const classesTitle = clsx(
-      "card-title body text-break text-truncate text-truncate-2 pe-32",
-      {
-        placeholder: isLoading,
-      },
-    );
-
-    const classesText = clsx("card-text small", {
-      placeholder: isLoading,
-    });
-
     const classesName = clsx("small text-truncate", {
       placeholder: isLoading,
     });
@@ -145,103 +94,71 @@ const Card = forwardRef(
       },
     );
 
+    const classesTitle = clsx(
+      "card-title body text-break text-truncate text-truncate-2 pe-32",
+      {
+        placeholder: isLoading,
+      },
+    );
+    const classesText = clsx("card-text small", {
+      placeholder: isLoading,
+    });
+
     const appCode = app ? getIconCode(app) : "placeholder";
 
     const classesFiles = clsx(`color-app-${appCode}`, {
       placeholder: isLoading,
     });
 
+    const values = useMemo(
+      () => ({
+        name: name!,
+        app: app!,
+        classesName: classesName!,
+        classesProfile: classesProfile!,
+        classesTitle: classesTitle!,
+        classesText: classesText!,
+        classesFiles: classesFiles!,
+        imageSrc: imageSrc!,
+      }),
+      [
+        name,
+        app,
+        classesName,
+        classesProfile,
+        classesTitle,
+        classesText,
+        classesFiles,
+        imageSrc,
+      ],
+    );
+
     function handleOnSelect(event: React.MouseEvent) {
       event.stopPropagation();
       onSelect?.();
     }
 
-    const renderResource = resourceSrc ? (
-      <div className="card-image">
-        <Image
-          alt=""
-          src={resourceSrc}
-          width="80"
-          height="80"
-          objectFit="cover"
-          className="h-full"
-        />
-      </div>
-    ) : (
-      <AppIcon app={app} iconFit="ratio" size="80" variant="rounded" />
-    );
-
-    const renderThumbnails = isFolder ? (
-      <Files width="48" height="48" className={classesFiles} />
-    ) : (
-      renderResource
-    );
-
-    const renderUserPhoto = userSrc ? (
-      <Avatar
-        alt={creatorName}
-        size="xs"
-        src={userSrc}
-        variant="circle"
-        width="24"
-        height="24"
-      />
-    ) : (
-      <OneProfile />
-    );
-
     return (
-      <div ref={ref} className={classes} {...restProps}>
-        {!isLoading && (
-          <IconButton
-            aria-label="Open Action Bar"
-            className="z-3"
-            color="secondary"
-            icon={<Options />}
-            onClick={handleOnSelect}
-            variant="ghost"
-          />
-        )}
-        <button
-          onClick={onOpen}
-          className="position-absolute bottom-0 end-0 top-0 start-0 opacity-0 z-1 w-100"
-          aria-label="Open resource"
-        ></button>
-        <div className="card-body">
-          {renderThumbnails}
-          <div>
-            <h3 className={classesTitle}>
-              <strong>{name}</strong>
-            </h3>
-            {!isFolder ? (
-              <p className="card-text small">
-                <em className={classesText}>{updatedAt}</em>
-              </p>
-            ) : null}
-          </div>
+      <CardContext.Provider value={values}>
+        <div ref={ref} className={classes} {...restProps}>
+          {!isLoading && (
+            <IconButton
+              aria-label="Open Action Bar"
+              className="z-3"
+              color="secondary"
+              icon={<Options />}
+              onClick={handleOnSelect}
+              variant="ghost"
+            />
+          )}
+          <button
+            onClick={onOpen}
+            className="position-absolute bottom-0 end-0 top-0 start-0 opacity-0 z-1 w-100"
+            aria-label="Open resource"
+          ></button>
+          {children}
         </div>
-        {!isFolder ? (
-          <div className="card-footer gap-16">
-            <div className={classesProfile}>
-              {renderUserPhoto}
-              <p className={classesName}>{creatorName}</p>
-            </div>
-            <div className="d-inline-flex align-items-center gap-8">
-              {isPublic && (
-                <Tooltip message={messagePublic} placement="top">
-                  <Globe width={16} height={16} />
-                </Tooltip>
-              )}
-
-              {isShared && (
-                <Tooltip message={messageShared} placement="top">
-                  <Users width={16} height={16} />
-                </Tooltip>
-              )}
-            </div>
-          </div>
-        ) : null}
-      </div>
+      </CardContext.Provider>
     );
   },
 );
