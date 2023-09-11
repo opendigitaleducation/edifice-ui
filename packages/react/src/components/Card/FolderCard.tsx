@@ -2,10 +2,10 @@ import { forwardRef } from "react";
 
 import { Files } from "@edifice-ui/icons";
 
-import { useCardControl } from "./CardContext";
+import { useCardContext } from "./CardContext";
 
 const FolderCard = forwardRef(() => {
-  const { classesFiles, classesTitle, name } = useCardControl();
+  const { classesFiles, classesTitle, name } = useCardContext();
 
   return (
     <div className="card-body">

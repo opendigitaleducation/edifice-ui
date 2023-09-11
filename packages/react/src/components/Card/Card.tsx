@@ -51,7 +51,38 @@ export interface CardProps extends ComponentPropsWithRef<"div"> {
    * Action to open a single resource
    */
   onOpen?: () => void;
+  /**
+   * User Image Profile
+   */
   imageSrc?: string;
+  /**
+   * Person who created resource
+   * */
+  creatorName?: string;
+  /**
+   * Updated time
+   */
+  updatedAt?: string;
+  /**
+   * Shared number
+   */
+  isShared?: boolean;
+  /**
+   * Show icon if resource is public
+   */
+  isPublic?: boolean;
+  /**
+   * User Image Profile
+   */
+  userSrc?: string;
+  /**
+   * Action to open a single resource
+   */
+  messageShared?: string;
+  /**
+   * Message tooltip icon Public
+   */
+  messagePublic?: string;
 }
 
 const Card = forwardRef(
@@ -67,6 +98,13 @@ const Card = forwardRef(
       onOpen,
       name = "Resource",
       imageSrc,
+      creatorName = "tom.mate",
+      userSrc,
+      updatedAt,
+      isPublic,
+      messagePublic,
+      messageShared,
+      isShared,
       ...restProps
     }: CardProps,
     ref: Ref<HTMLDivElement>,
@@ -120,6 +158,13 @@ const Card = forwardRef(
         classesText: classesText!,
         classesFiles: classesFiles!,
         imageSrc: imageSrc!,
+        creatorName: creatorName!,
+        userSrc: userSrc!,
+        updatedAt: updatedAt!,
+        isPublic: isPublic,
+        isShared: isShared,
+        messagePublic: messagePublic,
+        messageShared: messageShared,
       }),
       [
         name,
@@ -130,6 +175,13 @@ const Card = forwardRef(
         classesText,
         classesFiles,
         imageSrc,
+        creatorName,
+        userSrc,
+        updatedAt,
+        isPublic,
+        isShared,
+        messagePublic,
+        messageShared,
       ],
     );
 
