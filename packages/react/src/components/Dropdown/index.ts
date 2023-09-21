@@ -1,7 +1,9 @@
 export { default as Dropdown } from "./Dropdown";
-export { default as DropdownTrigger } from "./DropdownTrigger";
-export { default as SelectList } from "./SelectList";
+export { default as DropdownTrigger } from "./DropdownToggle";
+export { default as ActionMenu } from "./ActionMenu";
+export { default as SelectMenu } from "./SelectMenu";
 
 export * from "./Dropdown";
-export * from "./DropdownTrigger";
-export * from "./SelectList";
+export * from "./DropdownToggle";
+export * from "./ActionMenu";
+export * from "./SelectMenu";

@@ -1,140 +1,278 @@
-import { useState } from "react";
-
 import { Meta, StoryObj } from "@storybook/react";
 
 import Dropdown from "./Dropdown";
-import DropdownTrigger from "./DropdownTrigger";
 import {
+  Block,
+  Copy,
+  Cut,
+  Delete,
+  Edit,
   Filter,
-  SortAscendingLetters,
-  SortDescending,
-  SortDescendingLetters,
+  Headphone,
+  Image,
+  Print,
 } from "@edifice-ui/icons";
-import SelectList, { OptionListItemType } from "./SelectList";
+import { DropdownMenuOptions } from "./DropdownMenu";
+import SelectMenu from "./SelectMenu";
+import { useEffect, useState } from "react";
 
 const meta: Meta<typeof Dropdown> = {
-  title: "Components/Dropdown",
+  title: "Components/Dropdowns/Base",
   component: Dropdown,
-  decorators: [
-    (Story) => (
-      <div style={{ height: "15em" }}>
-        {/* 👇 Decorators in Storybook also accept a function. Replace <Story/> with Story() to enable it  */}
-        <Story />
-      </div>
-    ),
-  ],
+  decorators: [(Story) => <div style={{ height: "400px" }}>{Story()}</div>],
 };
 
 export default meta;
 type Story = StoryObj<typeof Dropdown>;
 
-const options: OptionListItemType[] = [
+const options: DropdownMenuOptions[] = [
   {
-    value: 1,
-    label: "Item choice",
-    icon: SortAscendingLetters,
+    id: "1",
+    icon: <Image width={22} height={22} />,
+    label: "Action label",
+    action: () => console.log("click"),
   },
   {
-    value: 2,
-    label: "Item choice 2",
-    icon: SortDescendingLetters,
+    id: "2",
+    icon: <Image width={22} height={22} />,
+    label: "Action label",
+    action: () => console.log("click"),
   },
   {
-    value: 3,
-    label: "Item choice 3",
-    icon: SortDescending,
+    id: "3",
+    icon: <Image width={22} height={22} />,
+    label: "Action label",
+    action: () => console.log("click"),
+  },
+  {
+    id: "4",
+    icon: <Image width={22} height={22} />,
+    label: "Action label",
+    action: () => console.log("click"),
+  },
+  {
+    id: "5",
+    icon: <Image width={22} height={22} />,
+    label: "Action label",
+    action: () => console.log("click"),
+  },
+  {
+    id: "6",
+    icon: <Image width={22} height={22} />,
+    label: "Action label",
+    action: () => console.log("click"),
   },
 ];
 
 export const Base: Story = {
   render: (args) => {
-    const [listModel, setListModel] = useState<(string | number)[]>([]);
     return (
-      <Dropdown
-        trigger={
-          <DropdownTrigger
-            title="Dropdown toggle"
-            icon={<Filter width={20} />}
-            badgeContent={listModel.length > 0 ? listModel.length : undefined}
-          />
-        }
-        content={
-          <SelectList
-            options={options}
-            model={listModel}
-            onChange={(model) => setListModel(model)}
-          />
-        }
-      />
+      <Dropdown options={options}>
+        <Dropdown.Trigger title="Dropdown" />
+        <Dropdown.Menu>
+          <Dropdown.Item onClick={() => alert("click")}>
+            Dropdown Item
+          </Dropdown.Item>
+          <Dropdown.Item>Dropdown Item</Dropdown.Item>
+          <Dropdown.Item>Dropdown Item</Dropdown.Item>
+          <Dropdown.Item>Dropdown Item</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
     );
   },
 };
 
-export const HidingCheckbox: Story = {
+export const WithIcon: Story = {
   render: (args) => {
-    const [listModel, setListModel] = useState<(string | number)[]>([]);
     return (
-      <Dropdown
-        trigger={
-          <DropdownTrigger
-            title="Dropdown toggle"
-            icon={<Filter width={20} />}
-          />
-        }
-        content={
-          <SelectList
-            options={options}
-            model={listModel}
-            onChange={(model) => setListModel(model)}
-            hideCheckbox
-          />
-        }
-      />
+      <Dropdown options={options}>
+        <Dropdown.Trigger title="Dropdown" icon={<Filter />} />
+        <Dropdown.Menu>
+          <Dropdown.Item>Dropdown Item</Dropdown.Item>
+          <Dropdown.Item>Dropdown Item</Dropdown.Item>
+          <Dropdown.Item>Dropdown Item</Dropdown.Item>
+          <Dropdown.Item>Dropdown Item</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
     );
   },
   parameters: {
     docs: {
       description: {
-        story:
-          "Checkboxes are hideable by adding `hideCheckbox` props to the `<SelectList/>` Component.",
+        story: "`Dropdown.Trigger` accepts a prop `icon`",
       },
     },
   },
 };
 
-export const Ghost: Story = {
+export const ActionMenu: Story = {
   render: (args) => {
-    const [listModel, setListModel] = useState<(string | number)[]>([]);
-
     return (
-      <div className="d-flex justify-content-between ">
-        <Dropdown
-          trigger={
-            <DropdownTrigger
-              title="Dropdown toggle"
-              variant="ghost"
-              icon={<Filter width={20} />}
-              badgeContent={listModel.length > 0 ? listModel.length : undefined}
-            />
-          }
-          content={
-            <SelectList
-              options={options}
-              model={listModel}
-              onChange={(model) => setListModel(model)}
-              hideCheckbox
-            />
-          }
-        />
-      </div>
+      <Dropdown>
+        <Dropdown.Trigger title="Action menu" />
+        <Dropdown.Menu>
+          <Dropdown.Item icon={<Edit />} onClick={() => alert("edit")}>
+            Edit
+          </Dropdown.Item>
+          <Dropdown.Separator />
+          <Dropdown.Item icon={<Copy />} onClick={() => alert("copy")}>
+            Copy
+          </Dropdown.Item>
+          <Dropdown.Item icon={<Cut />} onClick={() => alert("cut")}>
+            Cut
+          </Dropdown.Item>
+          <Dropdown.Item icon={<Print />} onClick={() => alert("print")}>
+            Print
+          </Dropdown.Item>
+          <Dropdown.Separator />
+          <Dropdown.Item icon={<Delete />} onClick={() => alert("delete")}>
+            Delete
+          </Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
     );
   },
   parameters: {
     docs: {
       description: {
-        story:
-          "Change `variant` props to `ghost` in `<DropdownTrigger/> Component",
+        story: "Dropdown.Trigger accepts a prop `icon`",
       },
     },
   },
 };
+
+export const CheckboxGroup: Story = {
+  render: (args) => {
+    const [selectedCheckboxes, setSelectedCheckboxes] = useState<
+      (string | number)[]
+    >([]);
+
+    const handleMultiCheckbox = (value: string | number) => {
+      let checked = [...selectedCheckboxes];
+      const findIndex = checked.findIndex(
+        (item: string): boolean => item === value,
+      );
+
+      if (!selectedCheckboxes.includes(value)) {
+        checked = [...selectedCheckboxes, value];
+      } else {
+        checked = selectedCheckboxes.filter(
+          (item: string, index: number) => index !== findIndex,
+        );
+      }
+
+      setSelectedCheckboxes(checked);
+    };
+
+    const checkboxOptions = [
+      { label: "Choice 1", value: 1 },
+      { label: "Choice 2", value: 2 },
+      { label: "Choice 3", value: 3 },
+    ];
+
+    return (
+      <Dropdown>
+        <Dropdown.Trigger title="Dropdown" icon={<Filter />} />
+        <Dropdown.Menu>
+          {checkboxOptions.map((option, index) => (
+            <Dropdown.CheckboxItem
+              key={index}
+              value={option.value}
+              model={selectedCheckboxes}
+              onChange={() => handleMultiCheckbox(option.value)}
+            >
+              {option.label}
+            </Dropdown.CheckboxItem>
+          ))}
+        </Dropdown.Menu>
+      </Dropdown>
+    );
+  },
+};
+
+/* export const ItemCheckbox: Story = {
+  render: (args) => {
+    const [value, setValue] = useState<string>("");
+    const [selectedCheckboxes, setSelectedCheckboxes] = useState<
+      (string | number)[]
+    >([]);
+
+    const handleOnChangeRadio = (value: string) => {
+      setValue(value);
+    };
+
+    const handleMultiCheckbox = (value: string | number) => {
+      let checked = [...selectedCheckboxes];
+      const findIndex = checked.findIndex(
+        (item: string): boolean => item === value,
+      );
+
+      if (!selectedCheckboxes.includes(value)) {
+        checked = [...selectedCheckboxes, value];
+      } else {
+        checked = selectedCheckboxes.filter(
+          (item: string, index: number) => index !== findIndex,
+        );
+      }
+
+      setSelectedCheckboxes(checked);
+    };
+
+    const radioOptions = [
+      {
+        label: "Classe préparatoire",
+        value: "CP",
+      },
+      {
+        label: "Cours élémentaire 1",
+        value: "CM1",
+      },
+      {
+        label: "Cours élémentaire 2",
+        value: "CM2",
+      },
+    ];
+
+    const checkboxOptions = [
+      { label: "Choice 1", value: 1 },
+      { label: "Choice 2", value: 2 },
+      { label: "Choice 3", value: 3 },
+    ];
+
+    return (
+      <Dropdown>
+        <Dropdown.Trigger title="Dropdown" icon={<Filter />} />
+        <Dropdown.Menu>
+          <Dropdown.Item
+            icon={<Image width={22} height={22} />}
+            onClick={() => console.log("click")}
+          >
+            Action label
+          </Dropdown.Item>
+          <Dropdown.Separator />
+          {radioOptions.map((option, index) => (
+            <Dropdown.RadioItem
+              key={index}
+              value={option.value}
+              model={value}
+              onChange={() => handleOnChangeRadio(option.value)}
+            >
+              {option.label}
+            </Dropdown.RadioItem>
+          ))}
+          <Dropdown.Separator />
+          {checkboxOptions.map((option, index) => (
+            <Dropdown.CheckboxItem
+              key={index}
+              value={option.value}
+              model={selectedCheckboxes}
+              onChange={() => handleMultiCheckbox(option.value)}
+            >
+              {option.label}
+            </Dropdown.CheckboxItem>
+          ))}
+        </Dropdown.Menu>
+      </Dropdown>
+    );
+  },
+}; */

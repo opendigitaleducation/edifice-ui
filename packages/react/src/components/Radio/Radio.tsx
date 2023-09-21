@@ -1,4 +1,4 @@
-import { ChangeEvent, forwardRef, ReactNode, Ref, useMemo } from "react";
+import { ChangeEvent, forwardRef, ReactNode, Ref, useId, useMemo } from "react";
 
 import clsx from "clsx";
 
@@ -11,7 +11,11 @@ export interface RadioProps
   /**
    * Use onChange event Handler to set new value of model
    */
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  /**
+   * If checked
+   */
+  checked?: boolean;
   /**
    * Label of the radio checkbox
    */
@@ -24,22 +28,21 @@ export interface RadioProps
 
 const Radio = forwardRef(
   (
-    { model, icon, label = false, disabled = false, ...restProps }: RadioProps,
+    {
+      model,
+      icon,
+      label = false,
+      disabled = false,
+      checked,
+      ...restProps
+    }: RadioProps,
     ref: Ref<HTMLInputElement>,
   ) => {
-    const id = useMemo(
-      () =>
-        restProps.id
-          ? restProps.id
-          : (
-              Math.floor(Math.random() * 999999999999) + 1000000000000
-            ).toString(),
-      [restProps.id],
-    );
+    const id = useId();
 
     const radioProps = {
       type: "radio",
-      checked: model === restProps.value,
+      checked,
       disabled,
       ref,
       className: clsx(
@@ -51,8 +54,8 @@ const Radio = forwardRef(
     };
 
     const inputProps = {
-      ...radioProps,
       ...restProps,
+      ...radioProps,
     };
 
     return (

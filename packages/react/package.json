@@ -43,6 +43,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@floating-ui/react": "0.25.4",
     "@popperjs/core": "2.11.8",
     "html-react-parser": "4.0.0",
     "react-popper": "2.3.0"

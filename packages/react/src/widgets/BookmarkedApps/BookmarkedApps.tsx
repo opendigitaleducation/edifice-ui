@@ -3,7 +3,6 @@ import { IWebApp } from "edifice-ts-client";
 import AppIcon from "../../components/AppIcon/AppIcon";
 
 const BookmarkedApps = ({ data }: { data: IWebApp[] }) => {
-  console.log({ data });
   if (data.length > 0) {
     return data.slice(0, 6).map((app, index) => {
       return (
