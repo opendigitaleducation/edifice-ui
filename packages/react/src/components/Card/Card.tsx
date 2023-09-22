@@ -1,42 +1,55 @@
-import React, { ComponentPropsWithRef, forwardRef, Ref } from "react";
+import React, { ComponentPropsWithRef, forwardRef, Ref, useMemo } from "react";
 
-import { Files, Globe, Options, Users } from "@edifice-ui/icons";
-import { OneProfile } from "@edifice-ui/icons/nav";
+import { Options } from "@edifice-ui/icons";
 import clsx from "clsx";
 import { IWebApp } from "edifice-ts-client";
 
-import useOdeIcons from "../../core/useOdeIcons/useOdeIcons";
-import { AppIcon } from "../AppIcon";
-import { Avatar } from "../Avatar";
+import { CardContext } from "./CardContext";
+import Folder from "./CardFolder";
+import Resource from "./CardResource";
+import { useOdeIcons } from "../../core";
 import { IconButton } from "../Button";
-import { Image } from "../Image";
-import { Tooltip } from "../Tooltip";
 
-export interface CardProps extends ComponentPropsWithRef<"div"> {
+export type CardType = "folder" | "resource" | null | undefined;
+
+export interface CardOptions {
+  type?: CardType;
   /**
-   * To show the icon of an application
+   * User Image Profile
    */
-  app?: IWebApp;
+  imageSrc?: string;
+  /**
+   * User Image Profile
+   */
+  userSrc?: string;
   /**
    * Person who created resource
    * */
   creatorName?: string;
   /**
-   * Name of resource or Folder
-   * */
-  name?: string;
-  /**
    * Updated time
    */
   updatedAt?: string;
   /**
-   * Shared number
-   */
-  people?: string;
+   * Name of resource or Folder
+   * */
+  name?: string;
+  isShared?: boolean;
+  isPublic?: boolean;
+}
+
+export interface TooltipOptions {
   /**
-   * Display Card as Folder
+   * Action to open a single resource
    */
-  isFolder?: boolean;
+  messageShared?: string;
+  /**
+   * Message tooltip icon Public
+   */
+  messagePublic?: string;
+}
+
+export interface CardProps extends ComponentPropsWithRef<"div"> {
   /**
    * Show selected Card
    */
@@ -46,82 +59,61 @@ export interface CardProps extends ComponentPropsWithRef<"div"> {
    */
   isAnimated?: boolean;
   /**
-   * Show icon if resource is shared
-   */
-  isShared?: boolean;
-  /**
-   * Show icon if resource is public
-   */
-  isPublic?: boolean;
-  /**
    * Skeleton Card
    * */
-  isLoading?: boolean;
+  isLoading: boolean;
   /**
-   * Optional class for styling purpose
+   * To show the icon of an application
    */
-  className?: string;
-  /**
-   * If Resource has image, `src` props shows the image
-   */
-  resourceSrc?: string;
-  /**
-   * User Image Profile
-   */
-  userSrc?: string;
-  /**
-   * Action to open a single resource
-   */
-  onOpen?: () => void;
+  app: IWebApp;
   /**
    * Select Card and Open ActionBar
    */
   onSelect?: () => void;
   /**
-   * Message tooltip icon Public
+   * Action to open a single resource
    */
-  messagePublic?: string;
+  onOpen?: () => void;
   /**
-   * Message tooltip icon Shared
+   * Optional class for styling purpose
    */
-  messageShared?: string;
+  className?: string;
+  /**
+   * Card options to generate correct Card
+   */
+  options: CardOptions;
+  /**
+   * Tooltips text
+   */
+  tooltips?: TooltipOptions;
 }
 
-const Card = forwardRef(
+const Root = forwardRef(
   (
     {
+      options,
+      tooltips,
+      isLoading,
       app,
-      className,
-      creatorName = "tom.mate",
-      isAnimated = false,
-      isFolder = false,
-      isLoading = false,
-      isSelected = false,
-      isShared = false,
-      isPublic = false,
-      name = "Resource",
-      resourceSrc = "",
-      updatedAt = "2 days ago",
-      userSrc = "",
-      onOpen,
       onSelect,
-      messagePublic,
-      messageShared,
+      onOpen,
+      isSelected,
+      isAnimated,
+      className,
       ...restProps
     }: CardProps,
     ref: Ref<HTMLDivElement>,
   ) => {
     const { getIconCode } = useOdeIcons();
 
-    const classes = clsx(
-      "card",
-      {
-        "placeholder-glow": isLoading,
-        "is-selected": isSelected,
-        "is-animated": isAnimated,
-      },
-      className,
-    );
+    function handleOnSelect(event: React.MouseEvent) {
+      event.stopPropagation();
+      onSelect?.();
+    }
+
+    const { type } = options;
+
+    const appCode = app ? getIconCode(app) : "placeholder";
 
     const classesTitle = clsx(
       "card-title body text-break text-truncate text-truncate-2 pe-32",
@@ -130,122 +122,70 @@ const Card = forwardRef(
       },
     );
 
-    const classesText = clsx("card-text small", {
-      placeholder: isLoading,
-    });
-
-    const classesName = clsx("small text-truncate", {
-      placeholder: isLoading,
-    });
-
-    const classesProfile = clsx(
-      "d-inline-flex align-items-center gap-8 text-truncate",
-      {
-        placeholder: isLoading,
-      },
+    const values = useMemo(
+      () => ({
+        options,
+        isLoading,
+        classesTitle,
+        app,
+        appCode,
+        tooltips,
+      }),
+      [app, appCode, classesTitle, isLoading, options, tooltips],
     );
 
-    const appCode = app ? getIconCode(app) : "placeholder";
-
-    const classesFiles = clsx(`color-app-${appCode}`, {
-      placeholder: isLoading,
-    });
-
-    function handleOnSelect(event: React.MouseEvent) {
-      event.stopPropagation();
-      onSelect?.();
-    }
-
-    const renderResource = resourceSrc ? (
-      <div className="card-image">
-        <Image
-          alt=""
-          src={resourceSrc}
-          width="80"
-          height="80"
-          objectFit="cover"
-          className="h-full"
-        />
-      </div>
-    ) : (
-      <AppIcon app={app} iconFit="ratio" size="80" variant="rounded" />
-    );
-
-    const renderThumbnails = isFolder ? (
-      <Files width="48" height="48" className={classesFiles} />
-    ) : (
-      renderResource
-    );
-
-    const renderUserPhoto = userSrc ? (
-      <Avatar
-        alt={creatorName}
-        size="xs"
-        src={userSrc}
-        variant="circle"
-        width="24"
-        height="24"
-      />
-    ) : (
-      <OneProfile />
-    );
+    const Cards = {
+      folder: <Card.Folder />,
+      resource: <Card.Resource />,
+      undefined: <Card.Resource />,
+      default: null,
+    };
 
     return (
-      <div ref={ref} className={classes} {...restProps}>
-        {!isLoading && (
-          <IconButton
-            aria-label="Open Action Bar"
-            className="z-3"
-            color="secondary"
-            icon={<Options />}
-            onClick={handleOnSelect}
-            variant="ghost"
-          />
-        )}
-        <button
-          onClick={onOpen}
-          className="position-absolute bottom-0 end-0 top-0 start-0 opacity-0 z-1 w-100"
-          aria-label="Open resource"
-        ></button>
-        <div className="card-body">
-          {renderThumbnails}
-          <div>
-            <h3 className={classesTitle}>
-              <strong>{name}</strong>
-            </h3>
-            {!isFolder ? (
-              <p className="card-text small">
-                <em className={classesText}>{updatedAt}</em>
-              </p>
-            ) : null}
+      <CardContext.Provider value={values}>
+        <div
+          ref={ref}
+          className={clsx(
+            "card",
+            {
+              "placeholder-glow": isLoading,
+              "is-selected": isSelected,
+              "is-animated": isAnimated,
+            },
+            className,
+          )}
+          {...restProps}
+        >
+          <div className="card-header">
+            {!isLoading && (
+              <IconButton
+                aria-label="Open Action Bar"
+                className="z-3"
+                color="secondary"
+                icon={<Options />}
+                onClick={handleOnSelect}
+                variant="ghost"
+              />
+            )}
+            <button
+              onClick={onOpen}
+              className="position-absolute bottom-0 end-0 top-0 start-0 opacity-0 z-1 w-100"
+              aria-label="Open resource"
+            ></button>
           </div>
-        </div>
-        {!isFolder ? (
-          <div className="card-footer gap-16">
-            <div className={classesProfile}>
-              {renderUserPhoto}
-              <p className={classesName}>{creatorName}</p>
-            </div>
-            <div className="d-inline-flex align-items-center gap-8">
-              {isPublic && (
-                <Tooltip message={messagePublic} placement="top">
-                  <Globe width={16} height={16} />
-                </Tooltip>
-              )}
 
-              {isShared && (
-                <Tooltip message={messageShared} placement="top">
-                  <Users width={16} height={16} />
-                </Tooltip>
-              )}
-            </div>
-          </div>
-        ) : null}
-      </div>
+          {Cards[type as keyof CardType] || Cards["default"]}
+        </div>
+      </CardContext.Provider>
     );
   },
 );
 
-Card.displayName = "Card";
+Root.displayName = "Card";
+
+const Card = Object.assign(Root, {
+  Resource: Resource,
+  Folder: Folder,
+});
 
 export default Card;
