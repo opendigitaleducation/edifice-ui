@@ -1,11 +1,11 @@
 const DropdownSeparator = () => {
   return (
-    <li className="px-12 my-4">
+    <div role="separator" className="px-4 my-4">
       <hr className="m-0" />
-    </li>
+    </div>
   );
 };
 
-DropdownSeparator.displayName = "DropdownSeparator";
+DropdownSeparator.displayName = "Dropdown.Separator";
 
 export default DropdownSeparator;

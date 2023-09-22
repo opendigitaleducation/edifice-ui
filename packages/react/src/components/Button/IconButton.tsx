@@ -29,7 +29,7 @@ const IconButton = forwardRef(
     const buttonProps = {
       ...restProps,
       ...{
-        className: clsx("btn-icon", className),
+        className: clsx("btn-icon btn-sm", className),
       },
     };
 

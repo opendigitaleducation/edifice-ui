@@ -1,43 +1,9 @@
-import { Ref, forwardRef } from "react";
-import React from "react";
+import { ReactNode, Ref, forwardRef } from "react";
 
 import { useDropdownContext } from "./DropdownContext";
 
-export type DropdownMenuOptions =
-  | {
-      id: string;
-      /**
-       * Object type
-       */
-      type?: undefined;
-      /**
-       * Icon component
-       */
-      icon: JSX.Element;
-      /**
-       * Label for a11y
-       */
-      label: string;
-      /**
-       * Action OnClick
-       */
-      action: (elem: any) => any;
-    }
-  | {
-      id: string;
-      /**
-       * Object type
-       */
-      type: "divider";
-    };
-
-export interface DropdownMenuProps extends React.ComponentPropsWithRef<"ul"> {
-  /** Dropdown options */
-  options: DropdownMenuOptions[];
-}
-
 const DropdownMenu = forwardRef(
-  ({ children }: any, forwardRef: Ref<HTMLUListElement>) => {
+  ({ children }: { children: ReactNode }, forwardRef: Ref<HTMLDivElement>) => {
     const { menuProps } = useDropdownContext();
 
     return (
@@ -48,6 +14,6 @@ const DropdownMenu = forwardRef(
   },
 );
 
-DropdownMenu.displayName = "DropdownMenu";
+DropdownMenu.displayName = "Dropdown.Menu";
 
 export default DropdownMenu;

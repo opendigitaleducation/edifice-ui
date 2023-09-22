@@ -5,9 +5,9 @@ import clsx from "clsx";
 import { useDropdownContext } from "./DropdownContext";
 
 const DropdownItem = ({ icon, onClick, children, ...restProps }: any) => {
-  const { selectedItem, itemProps } = useDropdownContext();
-
-  const { onMenuItemClick, onMenuItemKeyDown } = itemProps;
+  const { itemProps, itemRefs, isFocused } = useDropdownContext();
+  const { onMenuItemClick, onMenuItemKeyDown, onMenuItemMouseEnter } =
+    itemProps;
 
   const handleOnClick = () => {
     onMenuItemClick();
@@ -17,19 +17,20 @@ const DropdownItem = ({ icon, onClick, children, ...restProps }: any) => {
   const id = useId();
 
   const dropdownItem = clsx("dropdown-item", {
-    active: selectedItem?.id === id,
+    focus: isFocused === id,
   });
 
   return (
     <div
       id={id}
       role="menuitem"
-      // ref={(el) => (itemsRef.current[i] = el)}
-      tabIndex={selectedItem?.id === id ? 0 : -1}
+      ref={(el) => (itemRefs.current[id] = el)}
+      tabIndex={isFocused === id ? 0 : -1}
       className={dropdownItem}
-      aria-current={selectedItem?.id === id}
+      aria-current={isFocused === id}
       onClick={handleOnClick}
-      onKeyDown={onMenuItemKeyDown}
+      onMouseEnter={onMenuItemMouseEnter}
+      onKeyDown={(event) => onMenuItemKeyDown(event, onClick)}
       {...restProps}
     >
       <div className="d-flex gap-8 align-items-center">
@@ -40,6 +41,6 @@ const DropdownItem = ({ icon, onClick, children, ...restProps }: any) => {
   );
 };
 
-DropdownItem.displayName = "DropdownItem";
+DropdownItem.displayName = "Dropdown.Item";
 
 export default DropdownItem;

@@ -1,80 +1,40 @@
 import { Meta, StoryObj } from "@storybook/react";
 
 import Dropdown from "./Dropdown";
-import {
-  Block,
-  Copy,
-  Cut,
-  Delete,
-  Edit,
-  Filter,
-  Headphone,
-  Image,
-  Print,
-} from "@edifice-ui/icons";
-import { DropdownMenuOptions } from "./DropdownMenu";
-import SelectMenu from "./SelectMenu";
-import { useEffect, useState } from "react";
+import { Copy, Cut, Delete, Edit, Filter, Print } from "@edifice-ui/icons";
+import { RefAttributes, useState } from "react";
+import IconButton, { IconButtonProps } from "../Button/IconButton";
 
 const meta: Meta<typeof Dropdown> = {
   title: "Components/Dropdowns/Base",
   component: Dropdown,
   decorators: [(Story) => <div style={{ height: "400px" }}>{Story()}</div>],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          "`Dropdown` Component with accessibility in mind (keyboard, mouse). It is fully customizable and accepts `Item`, `CheckboxItem`, `RadioItem`, `Separator` as compound components. A custom trigger can be used with a render prop. It comes with a custom hook `useDropdown` and can be use to create others dropdowns.",
+      },
+    },
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof Dropdown>;
 
-const options: DropdownMenuOptions[] = [
-  {
-    id: "1",
-    icon: <Image width={22} height={22} />,
-    label: "Action label",
-    action: () => console.log("click"),
-  },
-  {
-    id: "2",
-    icon: <Image width={22} height={22} />,
-    label: "Action label",
-    action: () => console.log("click"),
-  },
-  {
-    id: "3",
-    icon: <Image width={22} height={22} />,
-    label: "Action label",
-    action: () => console.log("click"),
-  },
-  {
-    id: "4",
-    icon: <Image width={22} height={22} />,
-    label: "Action label",
-    action: () => console.log("click"),
-  },
-  {
-    id: "5",
-    icon: <Image width={22} height={22} />,
-    label: "Action label",
-    action: () => console.log("click"),
-  },
-  {
-    id: "6",
-    icon: <Image width={22} height={22} />,
-    label: "Action label",
-    action: () => console.log("click"),
-  },
-];
-
 export const Base: Story = {
   render: (args) => {
     return (
-      <Dropdown options={options}>
-        <Dropdown.Trigger title="Dropdown" />
+      <Dropdown>
+        <Dropdown.Trigger label="Dropdown" />
         <Dropdown.Menu>
           <Dropdown.Item onClick={() => alert("click")}>
             Dropdown Item
           </Dropdown.Item>
+          <Dropdown.Separator />
           <Dropdown.Item>Dropdown Item</Dropdown.Item>
           <Dropdown.Item>Dropdown Item</Dropdown.Item>
+          <Dropdown.Separator />
           <Dropdown.Item>Dropdown Item</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
@@ -82,15 +42,26 @@ export const Base: Story = {
   },
 };
 
-export const WithIcon: Story = {
+export const MenuGroup: Story = {
   render: (args) => {
     return (
-      <Dropdown options={options}>
-        <Dropdown.Trigger title="Dropdown" icon={<Filter />} />
+      <Dropdown>
+        <Dropdown.Trigger label="Dropdown" />
         <Dropdown.Menu>
-          <Dropdown.Item>Dropdown Item</Dropdown.Item>
-          <Dropdown.Item>Dropdown Item</Dropdown.Item>
-          <Dropdown.Item>Dropdown Item</Dropdown.Item>
+          <Dropdown.Item onClick={() => alert("click")}>
+            Dropdown Item
+          </Dropdown.Item>
+          <Dropdown.Separator />
+          <Dropdown.MenuGroup label="Title label">
+            <Dropdown.Item>Dropdown Item</Dropdown.Item>
+            <Dropdown.Item>Dropdown Item</Dropdown.Item>
+          </Dropdown.MenuGroup>
+          <Dropdown.Separator />
+          <Dropdown.MenuGroup label="Title label">
+            <Dropdown.Item>Dropdown Item</Dropdown.Item>
+            <Dropdown.Item>Dropdown Item</Dropdown.Item>
+          </Dropdown.MenuGroup>
+          <Dropdown.Separator />
           <Dropdown.Item>Dropdown Item</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
@@ -99,7 +70,8 @@ export const WithIcon: Story = {
   parameters: {
     docs: {
       description: {
-        story: "`Dropdown.Trigger` accepts a prop `icon`",
+        story:
+          "`Dropdown.MenuGroup` is used when we need to have different sections. It accepts a prop `label` ",
       },
     },
   },
@@ -109,7 +81,7 @@ export const ActionMenu: Story = {
   render: (args) => {
     return (
       <Dropdown>
-        <Dropdown.Trigger title="Action menu" />
+        <Dropdown.Trigger label="Action menu" />
         <Dropdown.Menu>
           <Dropdown.Item icon={<Edit />} onClick={() => alert("edit")}>
             Edit
@@ -170,9 +142,15 @@ export const CheckboxGroup: Story = {
       { label: "Choice 3", value: 3 },
     ];
 
+    const count = selectedCheckboxes.length;
+
     return (
       <Dropdown>
-        <Dropdown.Trigger title="Dropdown" icon={<Filter />} />
+        <Dropdown.Trigger
+          label="Dropdown"
+          icon={<Filter />}
+          badgeContent={count}
+        />
         <Dropdown.Menu>
           {checkboxOptions.map((option, index) => (
             <Dropdown.CheckboxItem
@@ -190,7 +168,50 @@ export const CheckboxGroup: Story = {
   },
 };
 
-/* export const ItemCheckbox: Story = {
+export const RadioGroup: Story = {
+  render: (args) => {
+    const [value, setValue] = useState<string>("");
+
+    const handleOnChangeRadio = (value: string) => {
+      setValue(value);
+    };
+
+    const radioOptions = [
+      {
+        label: "Classe préparatoire",
+        value: "CP",
+      },
+      {
+        label: "Cours élémentaire 1",
+        value: "CM1",
+      },
+      {
+        label: "Cours élémentaire 2",
+        value: "CM2",
+      },
+    ];
+
+    return (
+      <Dropdown>
+        <Dropdown.Trigger label="Dropdown" icon={<Filter />} />
+        <Dropdown.Menu>
+          {radioOptions.map((option, index) => (
+            <Dropdown.RadioItem
+              key={index}
+              value={option.value}
+              model={value}
+              onChange={() => handleOnChangeRadio(option.value)}
+            >
+              {option.label}
+            </Dropdown.RadioItem>
+          ))}
+        </Dropdown.Menu>
+      </Dropdown>
+    );
+  },
+};
+
+export const Stack: Story = {
   render: (args) => {
     const [value, setValue] = useState<string>("");
     const [selectedCheckboxes, setSelectedCheckboxes] = useState<
@@ -241,10 +262,10 @@ export const CheckboxGroup: Story = {
 
     return (
       <Dropdown>
-        <Dropdown.Trigger title="Dropdown" icon={<Filter />} />
+        <Dropdown.Trigger label="Dropdown" icon={<Filter />} />
         <Dropdown.Menu>
           <Dropdown.Item
-            icon={<Image width={22} height={22} />}
+            // icon={<Image width={22} height={22} />}
             onClick={() => console.log("click")}
           >
             Action label
@@ -275,4 +296,50 @@ export const CheckboxGroup: Story = {
       </Dropdown>
     );
   },
-}; */
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`Dropdown` Component can accept any Dropdown Item to make your own custom dropdown",
+      },
+    },
+  },
+};
+
+export const CustomTrigger: Story = {
+  render: (args) => {
+    return (
+      <Dropdown>
+        {(
+          customTriggerProps: JSX.IntrinsicAttributes &
+            Omit<IconButtonProps, "ref"> &
+            RefAttributes<HTMLButtonElement>,
+        ) => (
+          <>
+            <IconButton
+              {...customTriggerProps}
+              type="button"
+              aria-label="label"
+              color="tertiary"
+              variant="ghost"
+              icon={<Edit />}
+            />
+
+            <Dropdown.Menu>
+              <Dropdown.Item>Dropdown Item</Dropdown.Item>
+              <Dropdown.Item>Dropdown Item</Dropdown.Item>
+            </Dropdown.Menu>
+          </>
+        )}
+      </Dropdown>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Any component can be used as a custom trigger when use as a function as children (render prop). It can access `customTriggerProps` to get required a11y attributes.",
+      },
+    },
+  },
+};

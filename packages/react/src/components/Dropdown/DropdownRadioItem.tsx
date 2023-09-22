@@ -5,15 +5,9 @@ import clsx from "clsx";
 import { useDropdownContext } from "./DropdownContext";
 import { Radio } from "../Radio";
 
-/* const DropdownItem = ({
-  option,
-  onClick,
-}: {
-  option: any;
-  onClick?: () => void;
-}) => { */
 const DropdownRadioItem = ({ children, value, model, onChange }: any) => {
-  const { selectedItem } = useDropdownContext();
+  const { itemProps, itemRefs, isFocused } = useDropdownContext();
+  const { onMenuItemKeyDown, onMenuItemMouseEnter } = itemProps;
 
   const id = useId();
 
@@ -27,15 +21,18 @@ const DropdownRadioItem = ({ children, value, model, onChange }: any) => {
   };
 
   const dropdownRadioItem = clsx("dropdown-item c-pointer", {
-    active: value === model || selectedItem?.id === id,
+    focus: isFocused === id,
   });
 
   return (
     <div
       id={id}
+      ref={(el) => (itemRefs.current[id] = el)}
       role="menuitemradio"
       aria-checked={value === model}
       onMouseUp={() => onChange(value)}
+      onKeyDown={(event) => onMenuItemKeyDown(event, () => onChange(value))}
+      onMouseEnter={onMenuItemMouseEnter}
       tabIndex={value === model ? 0 : -1}
       className={dropdownRadioItem}
     >
@@ -50,6 +47,6 @@ const DropdownRadioItem = ({ children, value, model, onChange }: any) => {
   );
 };
 
-DropdownRadioItem.displayName = "DropdownRadioItem";
+DropdownRadioItem.displayName = "Dropdown.RadioItem";
 
 export default DropdownRadioItem;

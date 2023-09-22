@@ -1,4 +1,4 @@
-import { useEffect, useId } from "react";
+import { useId } from "react";
 
 import clsx from "clsx";
 
@@ -13,8 +13,8 @@ import { Checkbox } from "../Checkbox";
   onClick?: () => void;
 }) => { */
 const DropdownCheckboxItem = ({ children, value, model, onChange }: any) => {
-  const { selectedItem, itemProps } = useDropdownContext();
-  const { onMenuItemClick, onMenuItemKeyDown } = itemProps;
+  const { itemProps, itemRefs, isFocused } = useDropdownContext();
+  const { onMenuItemKeyDown, onMenuItemMouseEnter } = itemProps;
 
   const id = useId();
 
@@ -28,20 +28,18 @@ const DropdownCheckboxItem = ({ children, value, model, onChange }: any) => {
   };
 
   const dropdownCheckboxItem = clsx("dropdown-item c-pointer", {
-    active: value === model || selectedItem?.id === id || checked,
+    focus: isFocused === id,
   });
 
   return (
     <div
       id={id}
+      ref={(el) => (itemRefs.current[id] = el)}
       role="menuitemcheckbox"
       aria-checked={checked}
       onMouseUp={() => onChange(value)}
-      /* onKeyDown={(event) => {
-        event.key === "Enter" && console.log("enter");
-        onMenuItemKeyDown();
-      }} */
-      onKeyDown={onMenuItemKeyDown}
+      onKeyDown={(event) => onMenuItemKeyDown(event, () => onChange(value))}
+      onMouseEnter={onMenuItemMouseEnter}
       tabIndex={value === model ? 0 : -1}
       className={dropdownCheckboxItem}
     >
@@ -53,6 +51,6 @@ const DropdownCheckboxItem = ({ children, value, model, onChange }: any) => {
   );
 };
 
-DropdownCheckboxItem.displayName = "DropdownCheckboxItem";
+DropdownCheckboxItem.displayName = "Dropdown.CheckboxItem";
 
 export default DropdownCheckboxItem;
