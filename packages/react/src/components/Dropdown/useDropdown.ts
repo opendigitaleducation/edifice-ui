@@ -36,7 +36,7 @@ const useDropdown = () => {
 
   /* states */
   const [visible, setVisible] = useState<boolean>(false);
-  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [activeIndex, setActiveIndex] = useState<number>(-1);
   const [isFocused, setIsFocused] = useState<string | null>(null);
 
   const { refs, floatingStyles } = useFloating({
@@ -44,7 +44,7 @@ const useDropdown = () => {
     open: visible,
     onOpenChange: setVisible,
     whileElementsMounted: autoUpdate,
-    middleware: [offset(4), flip({ padding: 10 })],
+    middleware: [offset(4), flip({ padding: 0 })],
   });
 
   /* refs */
@@ -54,8 +54,18 @@ const useDropdown = () => {
 
   useEffect(() => {
     if (visible) {
-      if (menuRef.current) menuRef.current.focus();
+      if (menuRef.current) {
+        menuRef.current.focus();
+        setActiveIndex(0);
+      }
+    } else {
+      setActiveIndex(-1);
+      itemRefs.current = {};
+    }
+  }, [visible]);
 
+  useEffect(() => {
+    if (activeIndex !== -1) {
       const currentItem = Object.values(itemRefs.current)[
         activeIndex
       ] as HTMLElement;
@@ -63,7 +73,7 @@ const useDropdown = () => {
       setIsFocused(id);
       currentItem.focus();
     }
-  }, [visible, activeIndex]);
+  }, [activeIndex]);
 
   const nextItem = () => {
     const items = Object.values(itemRefs.current);
@@ -107,7 +117,6 @@ const useDropdown = () => {
 
   const onTriggerKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLButtonElement>) => {
-      console.log("onTriggerKeyDown");
       let flag = false;
 
       switch (event.code) {
@@ -275,7 +284,7 @@ const useDropdown = () => {
       className: "dropdown-menu bg-white shadow rounded-4 py-12 px-8",
       "aria-labelledby": `dropdown-toggle-${id}`,
       "aria-activedescendant": isFocused,
-      style: { display: visible ? "flex" : "none", ...floatingStyles },
+      style: { ...floatingStyles },
     },
     /* ItemProps to spread to any item Component */
     itemProps: {

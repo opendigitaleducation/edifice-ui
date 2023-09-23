@@ -4,13 +4,13 @@ import { useDropdownContext } from "./DropdownContext";
 
 const DropdownMenu = forwardRef(
   ({ children }: { children: ReactNode }, forwardRef: Ref<HTMLDivElement>) => {
-    const { menuProps } = useDropdownContext();
+    const { menuProps, visible } = useDropdownContext();
 
-    return (
+    return visible ? (
       <div ref={forwardRef} {...menuProps}>
         {children}
       </div>
-    );
+    ) : null;
   },
 );
 
