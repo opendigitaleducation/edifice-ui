@@ -269,7 +269,7 @@ const MediaLibrary = ({
           id="media-library"
           isOpen={type !== null}
           onModalClose={onCancel}
-          size="xl"
+          size="lg"
         >
           <Modal.Header onModalClose={onCancel}>{modalHeader}</Modal.Header>
           <Modal.Body>
