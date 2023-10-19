@@ -21,7 +21,7 @@ const AppHeader = forwardRef(
     { children, render, isFullscreen = false }: AppHeaderProps,
     ref: Ref<HTMLDivElement>,
   ) => {
-    const classes = clsx("d-flex flex-wrap p-16 gap-8 border-bottom bg-white", {
+    const classes = clsx("d-flex p-16 border-bottom bg-white", {
       "justify-content-between": render,
       "mx-n16": !isFullscreen,
       "z-3 top-0 start-0 end-0 position-fixed": isFullscreen,
@@ -31,9 +31,7 @@ const AppHeader = forwardRef(
       <div ref={ref} className={classes}>
         {children}
         {render ? (
-          <div className="d-flex align-items-center  ms-auto gap-8">
-            {render()}
-          </div>
+          <div className="d-flex align-items-center gap-8">{render()}</div>
         ) : null}
       </div>
     );

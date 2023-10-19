@@ -14,56 +14,21 @@ import useDropdown from "./hooks/useDropdown";
 import { useClickOutside } from "../../hooks";
 
 export interface DropdownProps {
-  /** Children Props */
-  children: ReactNode | ((...props: any) => ReactNode);
-  /** Full width Dropdown */
+  children: ReactNode | ((props: any) => ReactNode);
   block?: boolean;
-  /**
-   * Add overflow and maxHeight
-   */
-  overflow?: boolean;
-  /**
-   * Default placement with FloatingUI
-   */
   placement?: "bottom-end" | "bottom-start";
 }
-
-export type DropdownMenuOptions =
-  | {
-      /**
-       * Object type
-       */
-      type?: undefined;
-      /**
-       * Icon component
-       */
-      icon: JSX.Element;
-      /**
-       * Label for a11y
-       */
-      label: string;
-      /**
-       * Action OnClick
-       */
-      action: (elem: any) => any;
-    }
-  | {
-      /**
-       * Object type
-       */
-      type: "divider";
-    };
 
 const Root = ({
   children,
   block,
-  overflow = true,
   placement = "bottom-start",
 }: DropdownProps) => {
   const {
     visible,
     isFocused,
     triggerProps,
+    customTriggerProps,
     menuProps,
     itemProps,
     itemRefs,
@@ -88,14 +53,13 @@ const Root = ({
 
   const dropdown = clsx("dropdown", {
     "w-100": block,
-    overflow,
   });
 
   return (
     <DropdownContext.Provider value={value}>
       <div ref={ref} className={dropdown}>
         {typeof children === "function"
-          ? children(triggerProps, itemRefs)
+          ? children(customTriggerProps)
           : children}
       </div>
     </DropdownContext.Provider>

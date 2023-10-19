@@ -48,7 +48,7 @@ export interface ImagePickerProps extends ComponentPropsWithRef<"input"> {
   /**
    * Callback when uploading image
    */
-  onUploadImage: (file: File) => void;
+  onUploadImage: (obj: Record<string, string>) => void;
   /**
    * Callback when deleting image
    */
@@ -80,7 +80,9 @@ const ImagePicker = forwardRef(
       setPreview({ ...preview, name: "", image: "" });
 
       const file = files?.[0];
-      if (!file) return;
+      if (!file) {
+        return;
+      }
 
       const newPreview = {
         ...preview,
@@ -89,7 +91,7 @@ const ImagePicker = forwardRef(
       };
 
       setPreview(newPreview);
-      onUploadImage(file);
+      onUploadImage(newPreview);
     };
 
     const handleClick = () => {

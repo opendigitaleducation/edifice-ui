@@ -32,11 +32,7 @@ const SearchEngine = () => {
         <Search className="icon search" />
         <span className="nav-text">{t("navbar.search")}</span>
       </a>
-      <Popover
-        id={popoverSearchId}
-        isVisible={isSearchHovered}
-        className="d-none d-md-flex"
-      >
+      <Popover id={popoverSearchId} isVisible={isSearchHovered}>
         <FormControl
           id="my-search-input"
           className="search-text input-group py-8 px-12"

@@ -91,6 +91,8 @@ const Template = (args) => {
   const maxEventHistory = 20;
 
   const setRotativeEvents = (event: string) => {
+    console.log(event);
+
     if (events.length >= maxEventHistory) {
       setEvents([event]);
       return;

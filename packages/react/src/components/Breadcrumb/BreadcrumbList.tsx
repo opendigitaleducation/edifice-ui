@@ -19,7 +19,7 @@ const BreadcrumbList = forwardRef(
     ref: Ref<HTMLOListElement>,
   ) => {
     const classes = clsx(
-      "breadcrumb d-flex flex-nowrap align-items-center mb-0",
+      "breadcrumb d-flex align-items-center mb-0",
       className,
     );
     return (
