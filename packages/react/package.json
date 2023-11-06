@@ -43,37 +43,37 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@floating-ui/react": "0.26.0",
+    "@floating-ui/react": "0.26.1",
     "@popperjs/core": "2.11.8",
-    "html-react-parser": "4.2.2",
+    "html-react-parser": "5.0.6",
     "react-popper": "2.3.0"
   },
   "devDependencies": {
     "@edifice-ui/icons": "workspace:*",
     "@react-spring/web": "9.7.3",
     "@tanstack/react-query": "4.36.1",
-    "@types/node": "20.8.4",
-    "@types/react": "18.2.28",
-    "@types/react-dom": "18.2.13",
+    "@types/node": "20.8.10",
+    "@types/react": "18.2.36",
+    "@types/react-dom": "18.2.14",
     "clsx": "2.0.0",
-    "concurrently": "8.2.1",
+    "concurrently": "8.2.2",
     "edifice-ts-client": "develop",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "2.4.1",
-    "react-i18next": "13.0.1",
-    "swiper": "10.0.3"
+    "react-i18next": "13.3.1",
+    "swiper": "11.0.3"
   },
   "peerDependencies": {
     "@edifice-ui/icons": "*",
-    "@react-spring/web": "9.7.2",
-    "@tanstack/react-query": "4.29.12",
-    "clsx": "1.2.1",
+    "@react-spring/web": "9.7.3",
+    "@tanstack/react-query": "4.36.1",
+    "clsx": "2.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "2.4.1",
-    "react-i18next": "13.2.2",
-    "swiper": "10.3.1"
+    "react-i18next": "13.3.1",
+    "swiper": "11.0.3"
   },
   "publishConfig": {
     "access": "public"
