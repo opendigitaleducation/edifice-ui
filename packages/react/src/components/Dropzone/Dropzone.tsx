@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import clsx from "clsx";
 import { WorkspaceElement } from "edifice-ts-client";
@@ -7,7 +7,7 @@ import { DropzoneContext } from "./DropzoneContext";
 import DropzoneDrag from "./DropzoneDrag";
 import DropzoneFile from "./DropzoneFile";
 import DropzoneImport from "./DropzoneImport";
-import useHandleFile from "../../core/useHandleFile/useHandleFile";
+import Files from "./Files";
 import { useDropzone } from "../../hooks";
 
 export interface AttachmentType {
@@ -32,35 +32,35 @@ const Dropzone = ({
   accept,
   multiple,
   handle = false,
-  importMessage,
-  onSuccess,
+  importMessage, //onSuccess,
 }: DropzoneProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const { handleDelete, setUploadFiles, uploadFiles } = useHandleFile();
+  const [files, setFiles] = useState<File[]>([]);
 
-  const handleInputChange = (files: FileList | null) => {
+  const handleInputChange = async (files: FileList | null) => {
     if (files && (accept?.includes(files[0].type) || accept?.length === 0)) {
-      setUploadFiles((oldAttachments) => {
-        const newArray = [...oldAttachments];
-        for (let i = 0; i < files?.length; i++) {
-          newArray.push(files[i]);
-        }
-        return newArray;
-      });
+      for (let i = 0; i < files?.length; i++) {
+        setFiles((oldAttachments) => [...oldAttachments, files[i]]);
+      }
     }
   };
 
-  const { handleDragLeave, handleDragging, handleDrop, dragging } = useDropzone(
-    inputRef,
-    handleInputChange,
-  );
+  const {
+    handleDragLeave,
+    handleDragging,
+    handleDrop,
+    handleDelete,
+    handleSave,
+    status,
+    dragging,
+  } = useDropzone(inputRef, handleInputChange);
 
   const classes = clsx(
     "dropzone",
     {
       "is-dragging": dragging,
-      "is-drop-files": uploadFiles.length !== 0 && !handle ? false : true,
+      "is-drop-files": files.length !== 0 && !handle ? false : true,
     },
     className,
   );
@@ -69,17 +69,27 @@ const Dropzone = ({
     () => ({
       inputRef,
       importMessage,
-      uploadFiles,
+      files,
       handleDelete,
-      setUploadFiles,
+      handleSave,
+      status,
+      setFiles,
     }),
-    [inputRef, importMessage, uploadFiles, handleDelete, setUploadFiles],
+    [
+      inputRef,
+      importMessage,
+      files,
+      handleDelete,
+      handleSave,
+      status,
+      setFiles,
+    ],
   );
 
-  useEffect(() => {
+  /* useEffect(() => {
     onSuccess((uploadFiles as WorkspaceElement[]).filter((el) => el._id && el));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [uploadFiles]);
+  }, [uploadFiles]); */
 
   return (
     <DropzoneContext.Provider value={value}>
@@ -95,8 +105,13 @@ const Dropzone = ({
             <Dropzone.Drag />
           ) : (
             <>
-              {uploadFiles.length !== 0 ? (
-                <Dropzone.File />
+              {files.length !== 0 ? (
+                <div className="drop-file-wrapper">
+                  <Dropzone.File />
+                  {files.map((file, index) => (
+                    <Files file={file} index={index} />
+                  ))}
+                </div>
               ) : (
                 <Dropzone.Import />
               )}

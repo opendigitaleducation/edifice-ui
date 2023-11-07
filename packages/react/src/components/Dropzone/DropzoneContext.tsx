@@ -2,12 +2,16 @@ import { createContext, useContext } from "react";
 
 import { WorkspaceElement } from "edifice-ts-client";
 
+import { Status } from "../../utils/Status";
+
 export interface DropzoneContextType {
   inputRef: React.MutableRefObject<HTMLInputElement | null>;
   importMessage?: string;
-  uploadFiles: (WorkspaceElement | File)[];
+  files: File[];
+  status: Status | undefined;
   handleDelete: (element: WorkspaceElement, index: number) => void;
-  setUploadFiles: any;
+  handleSave: any;
+  setFiles: any;
 }
 
 export const DropzoneContext = createContext<DropzoneContextType | null>(null);
