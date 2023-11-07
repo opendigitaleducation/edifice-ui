@@ -2,7 +2,7 @@ import { Meta, StoryObj } from "@storybook/react";
 
 import Dropzone from "./Dropzone";
 import { UploadCard } from "../../multimedia";
-import Files from "./Files";
+import Files from "../../multimedia/MediaLibrary/innertabs/Files";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta: Meta<typeof Dropzone> = {

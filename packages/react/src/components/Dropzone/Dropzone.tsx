@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { ReactNode, useMemo, useRef, useState } from "react";
 
 import clsx from "clsx";
 import { WorkspaceElement } from "edifice-ts-client";
@@ -7,7 +7,6 @@ import { DropzoneContext } from "./DropzoneContext";
 import DropzoneDrag from "./DropzoneDrag";
 import DropzoneFile from "./DropzoneFile";
 import DropzoneImport from "./DropzoneImport";
-import Files from "./Files";
 import { useDropzone } from "../../hooks";
 
 export interface AttachmentType {
@@ -23,6 +22,7 @@ interface DropzoneProps {
   multiple?: boolean;
   handle?: boolean;
   importMessage?: string;
+  children?: ReactNode;
   onSuccess: (res: WorkspaceElement[]) => void;
   onError: (err: string) => void;
 }
@@ -32,7 +32,8 @@ const Dropzone = ({
   accept,
   multiple,
   handle = false,
-  importMessage, //onSuccess,
+  children,
+  importMessage,
 }: DropzoneProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -46,15 +47,8 @@ const Dropzone = ({
     }
   };
 
-  const {
-    handleDragLeave,
-    handleDragging,
-    handleDrop,
-    handleDelete,
-    handleSave,
-    status,
-    dragging,
-  } = useDropzone(inputRef, handleInputChange);
+  const { handleDragLeave, handleDragging, handleDrop, status, dragging } =
+    useDropzone(inputRef, handleInputChange);
 
   const classes = clsx(
     "dropzone",
@@ -70,26 +64,11 @@ const Dropzone = ({
       inputRef,
       importMessage,
       files,
-      handleDelete,
-      handleSave,
       status,
       setFiles,
     }),
-    [
-      inputRef,
-      importMessage,
-      files,
-      handleDelete,
-      handleSave,
-      status,
-      setFiles,
-    ],
+    [inputRef, importMessage, files, status, setFiles],
   );
-
-  /* useEffect(() => {
-    onSuccess((uploadFiles as WorkspaceElement[]).filter((el) => el._id && el));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [uploadFiles]); */
 
   return (
     <DropzoneContext.Provider value={value}>
@@ -108,9 +87,7 @@ const Dropzone = ({
               {files.length !== 0 ? (
                 <div className="drop-file-wrapper">
                   <Dropzone.File />
-                  {files.map((file, index) => (
-                    <Files file={file} index={index} />
-                  ))}
+                  {children}
                 </div>
               ) : (
                 <Dropzone.Import />
