@@ -236,7 +236,7 @@ const MediaLibrary = ({
 
   // Stateful contextual values
   const [resultCounter, setResultCounter] = useState<number | undefined>();
-  const [result, setResult] = useState<WorkspaceElement | undefined>();
+  const [result, setResult] = useState<WorkspaceElement[]>();
   function setVisibleTab(tab: AvailableTab) {
     const index = tabs.findIndex((t) => t.id === tab);
     if (index < 0) throw "tab.not.visible";
@@ -251,7 +251,7 @@ const MediaLibrary = ({
   const handleTabChange = async () => {
     // Reset any existing result
     if (result) {
-      await odeServices.workspace().deleteFile([result]);
+      await odeServices.workspace().deleteFile(result);
     }
     setResult(undefined);
     setResultCounter(undefined);
@@ -263,7 +263,7 @@ const MediaLibrary = ({
 
   const handleOnCancel = async () => {
     if (result) {
-      await odeServices.workspace().deleteFile([result]);
+      await odeServices.workspace().deleteFile(result);
     }
     onCancel();
   };

@@ -33,7 +33,6 @@ const useDropzone = (ref: any, onFilesChange: (files: any) => void) => {
     handleDragLeave,
     handleDrop,
     dragging,
-    status,
   };
 };
 
