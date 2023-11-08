@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 
 import {
+  Applications,
+  Globe,
   ExternalLink,
   Folder,
   Mic,
@@ -11,6 +13,7 @@ import { WorkspaceElement, odeServices } from "edifice-ts-client";
 import { useTranslation } from "react-i18next";
 
 import { InnerTabs } from "./innertabs";
+import { ResourceTabResult } from "./innertabs/Resource";
 import { MediaLibraryContext } from "./MediaLibraryContext";
 import { Button } from "../../components";
 import Modal from "../../components/Modal/Modal";
@@ -105,6 +108,7 @@ const mediaLibraryTypes: { none: null } & {
  */
 export type MediaLibraryResult =
   | WorkspaceElement[] // Workspace result
+  | ResourceTabResult // Linker result
   | /*TODO type des autres résultats ?*/ any;
 
 /**
@@ -179,16 +183,16 @@ const MediaLibrary = ({
     },
     linker: {
       id: "external",
-      icon: <ExternalLink />,
-      label: t("Lien externe"),
+      icon: <Globe />,
+      label: t("Liens externes"),
       content: <InnerTabs.Linker />,
       availableFor: ["hyperlink"],
       isEnable: null,
     },
     resource: {
       id: "resource",
-      icon: <Folder />,
-      label: t("Lien interne"),
+      icon: <Applications />,
+      label: t("Ressources internes"),
       content: <InnerTabs.Resource />,
       availableFor: ["hyperlink"],
       isEnable: null,

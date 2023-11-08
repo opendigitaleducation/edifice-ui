@@ -276,7 +276,7 @@ const Workspace = ({ roles, onSelect, className }: WorkspaceProps) => {
               <Dropdown>
                 <Dropdown.Trigger
                   size="sm"
-                  label="Dernière modif."
+                  label={t("Dernière modif.")}
                   variant="ghost"
                 />
                 <Dropdown.Menu>

@@ -8,6 +8,7 @@ export * from "./useHeader";
 export * from "./useIsAdml";
 export * from "./useOdeIcons";
 export * from "./usePaths";
+export * from "./useResourceSearch";
 export * from "./useSession";
 export * from "./useUser";
 export * from "./useWorkspaceSearch";
