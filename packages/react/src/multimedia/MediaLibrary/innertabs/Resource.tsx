@@ -13,25 +13,25 @@ export type ResourceTabResult = {
 
 export const Resource = () => {
   const { t } = useTranslation();
-  const context = useMediaLibraryContext();
+  const { setResult, setResultCounter, appCode } = useMediaLibraryContext();
   const [isChecked, toggleChecked] = useToggle(false);
 
   const handleSelect = (resources: ILinkedResource[]) => {
-    context.setResult({
+    setResult({
       target: isChecked ? "_blank" : undefined,
       resources,
     } as ResourceTabResult);
     if (resources && resources.length) {
-      context.setResultCounter(resources.length);
+      setResultCounter(resources.length);
     } else {
-      context.setResultCounter(undefined);
+      setResultCounter(undefined);
     }
   };
 
   return (
     <div className="d-flex flex-column flex-fill gap-16">
       <InternalLinker
-        appCode={context.appCode}
+        appCode={appCode}
         onSelect={handleSelect}
       ></InternalLinker>
       <Checkbox

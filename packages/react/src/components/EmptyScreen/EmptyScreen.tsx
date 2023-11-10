@@ -1,3 +1,5 @@
+import clsx from "clsx";
+
 import { Heading } from "../Heading";
 
 export interface EmptyScreenProps {
@@ -20,6 +22,11 @@ export interface EmptyScreenProps {
    * Text to display
    */
   text?: string;
+
+  /**
+   * Optional class for styling purpose
+   */
+  className?: string;
 }
 
 const EmptyScreen = ({
@@ -27,7 +34,9 @@ const EmptyScreen = ({
   imageAlt = "",
   title,
   text,
+  className,
 }: EmptyScreenProps) => {
+  const textClass = clsx("text", className);
   return (
     <div className="emptyscreen">
       {imageSrc && (
@@ -47,7 +56,7 @@ const EmptyScreen = ({
           {title}
         </Heading>
       )}
-      {text && <div className="text">{text}</div>}
+      {text && <div className={textClass}>{text}</div>}
     </div>
   );
 };

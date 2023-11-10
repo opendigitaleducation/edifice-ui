@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 
-import { Search } from "@edifice-ui/icons";
+import { Applications, Search } from "@edifice-ui/icons";
 import { App, odeServices } from "edifice-ts-client";
 /*
  * Augmented definition of a resource, until behaviours are dropped.
@@ -16,8 +16,14 @@ import { App, odeServices } from "edifice-ts-client";
 import { ILinkedResource } from "edifice-ts-client";
 import { useTranslation } from "react-i18next";
 
-import { AppIcon, Dropdown, FormControl, Input } from "../../components";
-import { useResourceSearch } from "../../core";
+import {
+  AppIcon,
+  Dropdown,
+  EmptyScreen,
+  FormControl,
+  Input,
+} from "../../components";
+import { useOdeTheme, usePaths, useResourceSearch } from "../../core";
 import { useDebounce } from "../../hooks";
 
 /**
@@ -48,6 +54,8 @@ const InternalLinker = ({
   onSelect,
 }: InternalLinkerProps) => {
   const { t } = useTranslation();
+  const { theme } = useOdeTheme();
+  const [imagePath] = usePaths();
   const inputRef: Ref<HTMLInputElement> = useRef(null);
 
   // Get available applications, and a function to load their resources.
@@ -75,7 +83,9 @@ const InternalLinker = ({
           types: [selectedApplication.application],
           filters: {},
           pagination: { startIdx: 0, pageSize: 300 }, // ignored at the moment
-        }).then((resources) => setResources(resources));
+        })
+          .then((resources) => setResources(resources))
+          .catch(() => setResources([]));
       } else {
         setResources([]);
       }
@@ -90,11 +100,12 @@ const InternalLinker = ({
 
   // Update dropdown when available applications list is updated.
   useEffect(() => {
-    const webApps = resourceApplications.map((application) =>
-      odeServices.session().getWebApp(application),
-    );
-    Promise.all(webApps)
-      .then((webApps) =>
+    (async () => {
+      const appPromises = resourceApplications.map((application) =>
+        odeServices.session().getWebApp(application),
+      );
+      const webApps = await Promise.all(appPromises);
+      setOptions(
         resourceApplications
           .map((application, index) => {
             return {
@@ -106,14 +117,19 @@ const InternalLinker = ({
           .sort((app1, app2) =>
             app1.displayName.localeCompare(app2.displayName),
           ),
-      )
-      .then((apps) => setOptions(apps));
+      );
+    })();
   }, [resourceApplications, t]);
 
   // Load and display search results when debounce is over
   useEffect(() => {
     loadAndDisplayResources(debounceSearch);
   }, [loadAndDisplayResources, debounceSearch]);
+
+  // Notify parent when resources selection changes.
+  useEffect(() => {
+    onSelect?.(selectedDocuments);
+  }, [selectedDocuments, onSelect]);
 
   // Notify parent when an application is selected.
   const handleOptionClick = (option: ApplicationOption) => {
@@ -147,18 +163,13 @@ const InternalLinker = ({
     }
   };
 
-  // Notify parent when resources selection changes.
-  useEffect(() => {
-    onSelect?.(selectedDocuments);
-  }, [selectedDocuments, onSelect]);
-
   return (
     <div className="internal-linker flex-grow-1 w-100 rounded border gap-0">
       <div className="search d-flex bg-light rounded-top border-bottom">
         <div className="flex-shrink-1 p-8 border-end">
-          <Dropdown>
+          <Dropdown overflow>
             <Dropdown.Trigger
-              icon={selectedApplication?.icon}
+              icon={selectedApplication?.icon || <Applications />}
               label={t(
                 selectedApplication?.displayName || "Choix de l'application",
               )}
@@ -201,10 +212,10 @@ const InternalLinker = ({
         </div>
       </div>
 
-      {selectedApplication && (
+      {selectedApplication && resources && resources.length > 0 && (
         <div className="list row">
           <ul>
-            {resources?.map((resource) => (
+            {resources.map((resource) => (
               <li key={resource.assetId}>
                 <p>
                   {resource.name}, {resource.creatorName}
@@ -218,13 +229,25 @@ const InternalLinker = ({
         </div>
       )}
 
+      {selectedApplication && resources && resources.length <= 0 && (
+        <div className="d-flex justify-content-center mt-16">
+          <EmptyScreen
+            imageSrc={`${imagePath}/${theme?.bootstrapVersion}/illu-empty-search-${selectedApplication.application}.svg`}
+            text={t("Aucune ressource trouvée pour votre recherche.")}
+            className="mt-16"
+          />
+        </div>
+      )}
+
       {!selectedApplication && (
-        <div className="d-flex justify-content-center">
-          <p>
-            {t(
+        <div className="d-flex justify-content-center mt-32">
+          <EmptyScreen
+            imageSrc={`${imagePath}/${theme?.bootstrapVersion}/illu-empty-search.svg`}
+            text={t(
               "Sélectionnez, en haut à gauche, l’application dans laquelle se trouve la ressource que vous voulez ajouter !",
             )}
-          </p>
+            className="mt-32"
+          />
         </div>
       )}
     </div>
