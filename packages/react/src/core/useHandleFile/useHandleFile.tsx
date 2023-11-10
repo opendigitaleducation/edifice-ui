@@ -1,4 +1,4 @@
-import { WorkspaceElement, odeServices } from "edifice-ts-client";
+import { odeServices } from "edifice-ts-client";
 
 export default function useHandleFile() {
   async function saveFile(file: File) {
@@ -15,10 +15,9 @@ export default function useHandleFile() {
     }
   }
 
-  async function handleDelete(element: WorkspaceElement) {
+  async function deleteFile(file: File) {
     try {
-      await odeServices.workspace().deleteFile([element]);
-      //setUploadFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+      //await odeServices.workspace().deleteFile([element]);
     } catch (error) {
       console.error(error);
     }
@@ -26,6 +25,6 @@ export default function useHandleFile() {
 
   return {
     saveFile,
-    handleDelete,
+    deleteFile,
   };
 }

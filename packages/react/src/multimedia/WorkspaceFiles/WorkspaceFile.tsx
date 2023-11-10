@@ -12,6 +12,7 @@ interface WorkspaceFileProps {
   setWorkspaceElement: any;
   workspaceElement: WorkspaceElement[];
   index: number;
+  handleDelete: any;
 }
 
 const WorkspaceFile = ({
@@ -19,8 +20,9 @@ const WorkspaceFile = ({
   setWorkspaceElement,
   workspaceElement,
   index,
+  handleDelete,
 }: WorkspaceFileProps) => {
-  const { saveFile, handleDelete } = useHandleFile();
+  const { saveFile } = useHandleFile();
 
   const [status, setStatus] = useState<Status>("idle");
 
@@ -72,9 +74,9 @@ const WorkspaceFile = ({
   return (
     <UploadCard
       status={status}
-      onDelete={() => handleDelete(workspaceElement[index])}
+      onDelete={() => handleDelete(index)}
       onEdit={() => console.log("edit")}
-      onRetry={() => handleRetry()}
+      onRetry={handleRetry}
       item={fileInfo}
     />
   );

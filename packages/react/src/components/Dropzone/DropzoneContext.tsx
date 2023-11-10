@@ -6,6 +6,7 @@ export interface DropzoneContextType {
   files: File[];
   inputRef: any;
   importMessage: string | undefined;
+  setFiles: any;
   onSuccess: (res: WorkspaceElement[]) => void;
 }
 

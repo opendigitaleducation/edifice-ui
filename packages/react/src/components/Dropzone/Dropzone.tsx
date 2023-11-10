@@ -75,9 +75,10 @@ const Dropzone = ({
       files,
       inputRef,
       importMessage,
+      setFiles,
       onSuccess,
     }),
-    [inputRef, importMessage, files, onSuccess],
+    [inputRef, importMessage, files, setFiles, onSuccess],
   );
 
   return (

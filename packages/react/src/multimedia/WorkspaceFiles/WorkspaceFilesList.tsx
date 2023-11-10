@@ -12,8 +12,12 @@ export const WorkspaceFilesList = () => {
     [],
   );
 
+  const handleDelete = (index: number) => {
+    files.splice(index, 1);
+  };
+
   useEffect(() => {
-    onSuccess(workspaceElement.filter((el) => el?._id && el));
+    onSuccess(workspaceElement);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspaceElement]);
 
@@ -24,6 +28,7 @@ export const WorkspaceFilesList = () => {
           key={index}
           file={file}
           index={index}
+          handleDelete={handleDelete}
           setWorkspaceElement={setWorkspaceElement}
           workspaceElement={workspaceElement}
         />
