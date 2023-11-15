@@ -18,6 +18,4 @@ export default meta;
 
 type Story = StoryObj<typeof AudioRecorder>;
 
-export const Base: Story = {
-  render: (args) => <AudioRecorder />,
-};
+export const Base: Story = {};

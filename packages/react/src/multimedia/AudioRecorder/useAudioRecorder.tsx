@@ -14,14 +14,18 @@ import { ToolbarItem } from "../../components";
 export type RecordState =
   | "IDLE"
   | "RECORDING"
-  | "RECORDED"
-  | "PLAYING"
   | "PAUSED"
+  | "RECORDED"
   | "SAVING"
   | "SAVED";
 
-export default function useAudioRecorder() {
-  const [state, setState] = useState<RecordState>("IDLE");
+export type PlayState = "IDLE" | "PLAYING" | "PAUSED";
+
+export default function useAudioRecorder(
+  onAudioSaved?: (file: Blob, fileName: string) => void,
+) {
+  const [recordState, setRecordState] = useState<RecordState>("IDLE");
+  const [playState, setPlayState] = useState<PlayState>("IDLE");
 
   const [audioStream, setAudioStream] = useState<MediaStream>();
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
@@ -30,8 +34,9 @@ export default function useAudioRecorder() {
   const [startTime, setStartTime] = useState<number>(0);
   const [recordedTime, setRecordedTime] = useState<number>(0);
   const [playedTime, setPlayedTime] = useState<number>(0);
-  const [maxDuration] = useState<number>(180000);
+  const [maxDuration] = useState<number>(180_000);
 
+  const audioNameRef = useRef<HTMLInputElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
 
@@ -62,7 +67,7 @@ export default function useAudioRecorder() {
   }, [audioStream, enableAudioStream]);
 
   /**
-   * Get last updated recorded chunk and set the recorded video as source for user to watch it.
+   * Get last updated recorded chunk and set the recorded video as source for user to play it.
    */
   useEffect(() => {
     if (audioChunks.length && audioRef.current) {
@@ -79,42 +84,42 @@ export default function useAudioRecorder() {
    */
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setRecordedTime((prev) => {
-        if (state === "RECORDING") {
+      if (recordState === "RECORDING") {
+        setRecordedTime((prev) => {
+          if (prev + 500 > maxDuration) {
+            setRecordState("RECORDED");
+            recorderRef?.current?.stop();
+            return prev;
+          }
+
           return prev + 500; // add 500ms
-        }
-        return prev;
-      });
+        });
+      }
     }, 500);
 
     return () => {
       window.clearInterval(timer);
     };
-  }, [startTime, state]);
+  }, [startTime, recordState, maxDuration]);
 
   /**
    * Handle playing countup.
    */
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setPlayedTime((prev) => {
-        if (state === "PLAYING") {
+      if (playState === "PLAYING") {
+        setPlayedTime((prev) => {
           return prev + 500; // add 500ms
-        }
-        return prev;
-      });
+        });
+      }
     }, 500);
 
     return () => {
       window.clearInterval(timer);
     };
-  }, [startTime, state]);
+  }, [startTime, playState]);
 
   const handleRecord = useCallback(() => {
-    console.log("RECORD");
-    setStartTime(Date.now());
-    setState("RECORDING");
-
     if (audioStream) {
       recorderRef.current = new MediaRecorder(audioStream);
       recorderRef.current.ondataavailable = ({ data }: BlobEvent) => {
@@ -122,41 +127,62 @@ export default function useAudioRecorder() {
           setAudioChunks((prev) => [...prev, data]);
         }
         if (recordedTime >= maxDuration) {
+          setRecordState("RECORDED");
           recorderRef.current?.stop();
         }
       };
       recorderRef.current.onerror = (event) => console.error(event);
       recorderRef.current.start(1000); // collect 1000ms of data
+
+      console.log("RECORD");
+      setStartTime(Date.now());
+      setRecordState("RECORDING");
     }
   }, [audioStream, recordedTime, maxDuration]);
 
-  const handleStop = useCallback(() => {
-    console.log("STOP");
-
-    if (recorderRef.current?.state === "recording") {
-      recorderRef.current.requestData();
-      recorderRef.current.stop();
+  const handleRecordPause = useCallback(() => {
+    if (recorderRef?.current?.state === "recording") {
+      // We are recording we want to pause the recording
+      console.log("RECORDING PAUSED");
+      recorderRef?.current?.pause();
+      setRecordState("PAUSED");
+    } else {
+      // We paused the recording we want to resume it
+      console.log("RESUME RECORDING");
+      recorderRef?.current?.resume();
+      setRecordState("RECORDING");
     }
+  }, []);
 
-    setState("RECORDED");
-    setStartTime(0);
-  }, [recorderRef]);
+  const handlePlayStop = useCallback(() => {
+    console.log("STOP PLAYING");
+
+    // Stop Playing the record
+    if (audioRef?.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    setPlayState("IDLE");
+    setPlayedTime(0);
+  }, []);
 
   const handlePlay = useCallback(() => {
     console.log("PLAYING");
-    setState("PLAYING");
+    setPlayState("PLAYING");
     audioRef?.current?.play();
   }, []);
 
-  const handlePause = useCallback(() => {
-    console.log("PAUSED");
-    setState("PAUSED");
+  const handlePlayPause = useCallback(() => {
+    // We are playing the record we want to pause
+    console.log("PAUSED PAYING");
     audioRef?.current?.pause();
+    setPlayState("PAUSED");
   }, []);
 
   const handleReset = useCallback(() => {
     console.log("RESET");
-    setState("IDLE");
+    setRecordState("IDLE");
+    setPlayState("IDLE");
     setStartTime(0);
     setRecordedTime(0);
     setAudioChunks([]);
@@ -166,18 +192,24 @@ export default function useAudioRecorder() {
 
   const handleSave = useCallback(() => {
     console.log("SAVE");
-    setState("SAVING");
+    setRecordState("IDLE");
 
-    console.log(finalAudioBlob);
+    if (recorderRef?.current?.state === "paused") {
+      recorderRef.current.stop();
+    }
+
+    console.log("Blob :", finalAudioBlob);
 
     if (!finalAudioBlob) {
       console.error("Error while saving audio: recorded audio is undefined.");
       return;
     }
-  }, [finalAudioBlob]);
+
+    onAudioSaved?.(finalAudioBlob, audioNameRef.current?.value);
+  }, [finalAudioBlob, onAudioSaved]);
 
   const handleEnded = useCallback(() => {
-    setState("PAUSED");
+    setPlayState("IDLE");
     setPlayedTime(0);
     if (audioRef.current) {
       audioRef.current.currentTime = 0;
@@ -188,40 +220,67 @@ export default function useAudioRecorder() {
     {
       type: "icon",
       name: "record",
+      visibility:
+        recordState === "RECORDING" || recordState === "PAUSED"
+          ? "hide"
+          : "show",
       props: {
         icon: <Record color="" />,
         color: "danger",
-        disabled: state !== "IDLE",
+        disabled: recordState !== "IDLE",
         onClick: handleRecord,
       },
     },
     {
       type: "icon",
+      name: "recordPause",
+      visibility:
+        recordState === "RECORDING" || recordState === "PAUSED"
+          ? "show"
+          : "hide",
+      props: {
+        icon: (
+          <Pause
+            style={
+              recordState === "PAUSED" ? { color: "var(--edifice-danger)" } : {}
+            }
+          />
+        ),
+        disabled: recordState !== "RECORDING" && recordState !== "PAUSED",
+        onClick: handleRecordPause,
+      },
+    },
+    { type: "divider" },
+    {
+      type: "icon",
       name: "stop",
       props: {
         icon: <RecordStop />,
-        disabled: state !== "RECORDING",
-        onClick: handleStop,
+        disabled: playState !== "PLAYING" && playState !== "PAUSED",
+        onClick: handlePlayStop,
       },
     },
     {
       type: "icon",
       name: "play",
-      visibility: state === "PLAYING" ? "hide" : "show",
+      visibility: playState === "PLAYING" ? "hide" : "show",
       props: {
         icon: <PlayFilled />,
-        disabled: state !== "RECORDED" && state !== "PAUSED",
+        disabled:
+          recordState !== "RECORDED" &&
+          recordState !== "PAUSED" &&
+          playState !== "PAUSED",
         onClick: handlePlay,
       },
     },
     {
       type: "icon",
-      name: "pause",
-      visibility: state === "PLAYING" ? "show" : "hide",
+      name: "playPause",
+      visibility: playState === "PLAYING" ? "show" : "hide",
       props: {
         icon: <Pause />,
-        disabled: state !== "PLAYING",
-        onClick: handlePause,
+        disabled: playState !== "PLAYING",
+        onClick: handlePlayPause,
       },
     },
     { type: "divider" },
@@ -231,7 +290,10 @@ export default function useAudioRecorder() {
       props: {
         icon: <Refresh />,
         disabled:
-          state !== "RECORDED" && state !== "PLAYING" && state !== "PAUSED",
+          recordState !== "RECORDED" &&
+          playState !== "PLAYING" &&
+          playState !== "PAUSED" &&
+          recordState !== "PAUSED",
         onClick: handleReset,
       },
     },
@@ -241,19 +303,24 @@ export default function useAudioRecorder() {
       props: {
         icon: <Save />,
         disabled:
-          state !== "RECORDED" && state !== "PLAYING" && state !== "PAUSED",
+          recordState !== "RECORDED" &&
+          recordState !== "PAUSED" &&
+          playState !== "PLAYING" &&
+          playState !== "PAUSED",
         onClick: handleSave,
       },
     },
   ];
 
   return {
-    state,
+    recordState,
+    playState,
     recordedTime,
     playedTime,
     maxDuration,
     audioRef,
     toolbarItems,
+    audioNameRef,
     handleEnded,
   };
 }
