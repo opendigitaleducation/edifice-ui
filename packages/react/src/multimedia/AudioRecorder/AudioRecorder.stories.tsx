@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import AudioRecorder from "./AudioRecorder";
-import { WebSocket } from "mock-socket";
+import { mockWebSocket } from "../../utils/MockedDataProvider/MockWebsocket";
 
 const meta: Meta<typeof AudioRecorder> = {
   title: "Multimedia/AudioRecorder",
@@ -19,4 +19,10 @@ export default meta;
 
 type Story = StoryObj<typeof AudioRecorder>;
 
-export const Base: Story = {};
+export const Base: Story = {
+  render: (args) => {
+    const mockSocket = mockWebSocket();
+
+    return <AudioRecorder />;
+  },
+};
