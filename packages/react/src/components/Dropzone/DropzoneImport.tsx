@@ -19,12 +19,10 @@ const DropzoneImport = () => {
   return (
     <div className={classes}>
       <Download height={48} width={48} />
-      <p className="my-16">
-        {t(
-          "Glissez-déposez un/des fichier(s) depuis votre appareil ou cliquez sur parcourir",
-        )}
-      </p>
-      <Button onClick={() => inputRef?.current?.click()}>{t("import")}</Button>
+      <p className="my-16">{t("medialibrary.drop.info")}</p>
+      <Button onClick={() => inputRef?.current?.click()}>
+        {t("medialibrary.drop.import")}
+      </Button>
     </div>
   );
 };
