@@ -8,14 +8,6 @@ export const mockWebSocket = () => {
     close: () => {},
   };
 
-  // Simulez la réponse du serveur WebSocket
-  socket.addEventListener.withArgs("open", sinon.match.func).callsArg(1);
-  socket.addEventListener
-    .withArgs("message", sinon.match.func)
-    .callsArgWith(1, { data: "response" });
-  socket.addEventListener.withArgs("close", sinon.match.func).callsArg(1);
-  socket.addEventListener.withArgs("send", sinon.match.func).callsArg(1);
-
   sinon.stub(window, "WebSocket").callsFake((url: string) => {
     const mockServer = new Server(url);
 
