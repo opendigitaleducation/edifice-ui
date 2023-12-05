@@ -57,6 +57,7 @@
     "@tiptap/extension-color": "2.0.4",
     "@tiptap/extension-highlight": "2.0.4",
     "@tiptap/extension-text-style": "2.0.4",
+    "@tiptap-pro/extension-mathematics": "2.2.1",
     "@tiptap/extension-underline": "2.0.4",
     "@tiptap/pm": "2.0.4",
     "@tiptap/react": "2.0.4",
