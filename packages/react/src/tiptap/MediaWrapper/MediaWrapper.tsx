@@ -1,20 +1,15 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useRef } from "react";
 
-import { Editor, NodeViewWrapper } from "@tiptap/react";
+import { NodeViewWrapper } from "@tiptap/react";
 
 import { Image } from "../../components";
-import { useResizeMedia } from "../../hooks/useResizeMedia";
-
-interface MediaResizeProps {
-  editor: Editor;
-  [x: string]: any;
-}
+import { MediaResizeProps, useResizeMedia } from "../../hooks/useResizeMedia";
 
 const MediaWrapper = (props: MediaResizeProps) => {
   const { node } = props;
 
-  const resizableMedia = useRef(null);
+  const resizableMedia = useRef<HTMLAudioElement | HTMLVideoElement>(null);
 
   const {
     startHorizontalResize,
@@ -40,7 +35,7 @@ const MediaWrapper = (props: MediaResizeProps) => {
         ) : (
           // eslint-disable-next-line jsx-a11y/media-has-caption
           <video
-            ref={resizableMedia}
+            ref={resizableMedia && ""}
             controls={node.attrs.controls}
             src={node.attrs.src}
             width={node.attrs.width}

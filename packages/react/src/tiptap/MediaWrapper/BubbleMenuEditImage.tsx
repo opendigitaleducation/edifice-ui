@@ -8,6 +8,15 @@ import { useTranslation } from "react-i18next";
 
 import { Button, IconButton } from "../../components";
 
+interface ButtonSize {
+  icon: JSX.Element;
+  sizeName: string;
+  size: {
+    width: number;
+    height: number | string;
+  };
+}
+
 const BubbleMenuEditImage = ({ editor }: { editor: any }) => {
   const { t } = useTranslation();
 
@@ -38,7 +47,7 @@ const BubbleMenuEditImage = ({ editor }: { editor: any }) => {
     },
   ];
 
-  const handleButtonClick = (buttonSize: any) => {
+  const handleButtonClick = (buttonSize: ButtonSize) => {
     editor
       .chain()
       .focus()
@@ -51,7 +60,7 @@ const BubbleMenuEditImage = ({ editor }: { editor: any }) => {
   };
 
   return (
-    <div className="buble-menu">
+    <div className="bubble-menu">
       <Button
         size="lg"
         variant="ghost"

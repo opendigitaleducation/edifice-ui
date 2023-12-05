@@ -1,10 +1,16 @@
 import { useEffect, useRef } from "react";
 
-interface WidthAndHeight {
-  width: number;
+import { Editor } from "@tiptap/react";
+
+export interface MediaResizeProps {
+  editor: Editor;
+  [x: string]: any;
 }
 
-export const useResizeMedia = (props: any, refResizable: any) => {
+export const useResizeMedia = (
+  props: MediaResizeProps,
+  refResizable: React.RefObject<HTMLAudioElement | HTMLVideoElement>,
+) => {
   const aspectRatio = useRef(0);
 
   const lastCursorX = useRef(-1);
@@ -15,7 +21,7 @@ export const useResizeMedia = (props: any, refResizable: any) => {
 
   const proseMirrorContainerWidth = useRef(0);
 
-  const limitWidthOrHeight = ({ width }: WidthAndHeight) => width < 250;
+  const limitWidthOrHeight = (width: number) => width < 250;
 
   useEffect(() => {
     const proseMirrorContainerDiv = document.querySelector(".ProseMirror");
@@ -23,7 +29,7 @@ export const useResizeMedia = (props: any, refResizable: any) => {
     if (proseMirrorContainerDiv)
       proseMirrorContainerWidth.current = proseMirrorContainerDiv?.clientWidth;
 
-    if (!refResizable.current) return;
+    if (!refResizable) return;
     aspectRatio.current = 1.5;
 
     onVerticalResize("left", 0);
@@ -34,16 +40,16 @@ export const useResizeMedia = (props: any, refResizable: any) => {
     directionOfMouseMove: "right" | "left",
     diff: number,
   ) => {
-    if (!refResizable.current) {
+    if (!refResizable) {
       console.error("Media ref is undefined|null", {
-        resizableImg: refResizable.current,
+        refResizable: refResizable,
       });
       return;
     }
 
     const currentMediaDimensions = {
-      width: refResizable.current?.width,
-      height: refResizable.current?.height,
+      width: refResizable.current?.clientWidth,
+      height: refResizable.current?.clientHeight,
     };
 
     const newMediaDimensions = {
@@ -51,10 +57,14 @@ export const useResizeMedia = (props: any, refResizable: any) => {
       height: -1,
     };
 
-    if (directionOfMouseMove === "left") {
-      newMediaDimensions.width = currentMediaDimensions.width - Math.abs(diff);
-    } else {
-      newMediaDimensions.width = currentMediaDimensions.width + Math.abs(diff);
+    if (currentMediaDimensions.width) {
+      if (directionOfMouseMove === "left") {
+        newMediaDimensions.width =
+          currentMediaDimensions.width - Math.abs(diff);
+      } else {
+        newMediaDimensions.width =
+          currentMediaDimensions.width + Math.abs(diff);
+      }
     }
 
     if (newMediaDimensions.width > proseMirrorContainerWidth.current)
@@ -62,17 +72,17 @@ export const useResizeMedia = (props: any, refResizable: any) => {
 
     newMediaDimensions.height = newMediaDimensions.width / aspectRatio.current;
 
-    if (limitWidthOrHeight(newMediaDimensions)) return;
+    if (limitWidthOrHeight(newMediaDimensions.width)) return;
 
     setTimeout(() => {
       props.updateAttributes(newMediaDimensions);
     });
   };
 
-  const onVerticalMouseMove = (e: MouseEvent) => {
+  const onVerticalMouseMove = (event: MouseEvent) => {
     if (!isVerticalResizeActive.current) return;
 
-    const { clientX } = e;
+    const { clientX } = event;
 
     const diff = lastCursorX.current - clientX;
 
@@ -86,10 +96,10 @@ export const useResizeMedia = (props: any, refResizable: any) => {
   };
 
   const startVerticalResize = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ): void => {
     isVerticalResizeActive.current = true;
-    lastCursorX.current = e.clientX;
+    lastCursorX.current = event.clientX;
 
     document.addEventListener("mousemove", onVerticalMouseMove);
     document.addEventListener("mouseup", stopVerticalResize);
@@ -105,10 +115,10 @@ export const useResizeMedia = (props: any, refResizable: any) => {
 
   /* HORIZONTAL */
 
-  const onHorizontalMouseMove = (e: MouseEvent) => {
+  const onHorizontalMouseMove = (event: MouseEvent) => {
     if (!isHorizontalResizeActive.current) return;
 
-    const { clientY } = e;
+    const { clientY } = event;
 
     const diff = lastCursorY.current - clientY;
 
@@ -126,8 +136,8 @@ export const useResizeMedia = (props: any, refResizable: any) => {
     }
 
     const currentMediaDimensions = {
-      width: refResizable.current?.width,
-      height: refResizable.current?.height,
+      width: refResizable.current?.clientWidth,
+      height: refResizable.current?.clientHeight,
     };
 
     const newMediaDimensions = {
@@ -146,7 +156,7 @@ export const useResizeMedia = (props: any, refResizable: any) => {
 
     newMediaDimensions.height = newMediaDimensions.width / aspectRatio.current;
 
-    if (limitWidthOrHeight(newMediaDimensions)) return;
+    if (limitWidthOrHeight(newMediaDimensions.width)) return;
 
     setTimeout(() => {
       props.updateAttributes(newMediaDimensions);
@@ -156,10 +166,11 @@ export const useResizeMedia = (props: any, refResizable: any) => {
   const lastCursorY = useRef(-1);
 
   const startHorizontalResize = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
+    console.log(event);
     isHorizontalResizeActive.current = true;
-    lastCursorY.current = e.clientY;
+    lastCursorY.current = event.clientY;
 
     document.addEventListener("mousemove", onHorizontalMouseMove);
     document.addEventListener("mouseup", stopHorizontalResize);
