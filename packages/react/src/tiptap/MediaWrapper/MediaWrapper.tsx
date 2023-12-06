@@ -9,7 +9,7 @@ import { MediaResizeProps, useResizeMedia } from "../../hooks/useResizeMedia";
 const MediaWrapper = (props: MediaResizeProps) => {
   const { node } = props;
 
-  const resizableMedia = useRef<HTMLAudioElement | HTMLVideoElement>(null);
+  const resizableMedia = useRef<HTMLImageElement | HTMLVideoElement>(null);
 
   const {
     startHorizontalResize,
@@ -30,12 +30,12 @@ const MediaWrapper = (props: MediaResizeProps) => {
           <Image
             {...node.attrs}
             className={`custum-image`}
-            ref={resizableMedia}
+            ref={resizableMedia as React.RefObject<HTMLImageElement>}
           />
         ) : (
           // eslint-disable-next-line jsx-a11y/media-has-caption
           <video
-            ref={resizableMedia && ""}
+            ref={resizableMedia as React.RefObject<HTMLVideoElement>}
             controls={node.attrs.controls}
             src={node.attrs.src}
             width={node.attrs.width}

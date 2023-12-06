@@ -4,6 +4,7 @@ import {
   ImageSizeSmall,
   Wand,
 } from "@edifice-ui/icons";
+import { Editor } from "@tiptap/react";
 import { useTranslation } from "react-i18next";
 
 import { Button, IconButton } from "../../components";
@@ -17,7 +18,7 @@ interface ButtonSize {
   };
 }
 
-const BubbleMenuEditImage = ({ editor }: { editor: any }) => {
+const BubbleMenuEditImage = ({ editor }: { editor: Editor }) => {
   const { t } = useTranslation();
 
   const buttonSizeList = [
@@ -59,6 +60,10 @@ const BubbleMenuEditImage = ({ editor }: { editor: any }) => {
       .run();
   };
 
+  const { selection } = editor.view.state;
+
+  const selectedNode = editor.view.state.doc.nodeAt(selection.anchor);
+
   return (
     <div className="bubble-menu">
       <Button
@@ -75,9 +80,7 @@ const BubbleMenuEditImage = ({ editor }: { editor: any }) => {
           key={index}
           icon={button.icon}
           variant={
-            editor.view.state.selection.node?.attrs?.size === button.sizeName
-              ? "filled"
-              : "ghost"
+            selectedNode?.attrs?.size === button.sizeName ? "filled" : "ghost"
           }
           onClick={() => {
             handleButtonClick(button);

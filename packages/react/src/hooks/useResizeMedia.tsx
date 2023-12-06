@@ -9,7 +9,7 @@ export interface MediaResizeProps {
 
 export const useResizeMedia = (
   props: MediaResizeProps,
-  refResizable: React.RefObject<HTMLAudioElement | HTMLVideoElement>,
+  refResizable: React.RefObject<HTMLImageElement | HTMLVideoElement>,
 ) => {
   const aspectRatio = useRef(0);
 
