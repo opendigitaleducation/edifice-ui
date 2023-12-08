@@ -1,0 +1,141 @@
+import { useEffect, useState } from "react";
+
+import { ArrowRight, Globe, ImageNotFound } from "@edifice-ui/icons";
+import { Embedder, odeServices } from "edifice-ts-client";
+import { useTranslation } from "react-i18next";
+
+import { Button, FormControl, Image, Input } from "../../components";
+import { useDebounce } from "../../hooks";
+import { useMediaLibraryContext } from "../MediaLibrary/MediaLibraryContext";
+
+export interface VideoEmbedProps {
+  onSuccess: (resource?: string) => void;
+}
+
+const VideoEmbed = ({ onSuccess }: VideoEmbedProps) => {
+  const { t } = useTranslation();
+  const [url, setUrl] = useState<string>();
+  const [embedVideo, setEmbedVideo] = useState<string>();
+  const [embedder, setEmbbeder] = useState<Embedder | undefined>(undefined);
+  const debounceChangeUrl = useDebounce<string>(url || "", 300);
+  const [whiteListProvider, setWhiteListProvider] = useState<Embedder[]>();
+  const { switchType } = useMediaLibraryContext();
+
+  useEffect(() => {
+    initWhiteListProvider();
+  }, []);
+
+  useEffect(() => {
+    if (whiteListProvider && debounceChangeUrl) {
+      const embedderFound = odeServices
+        .embedder()
+        .getProviderFromUrl(whiteListProvider, debounceChangeUrl);
+      if (embedderFound) {
+        setEmbbeder(embedderFound);
+        const embedVideo = odeServices
+          .embedder()
+          .getEmbedCodeForProvider(embedderFound, debounceChangeUrl);
+        setEmbedVideo(embedVideo);
+        onSuccess(embedVideo);
+      } else {
+        setEmbbeder(undefined);
+        onSuccess();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debounceChangeUrl, whiteListProvider]);
+
+  const initWhiteListProvider = async () => {
+    const whiteListProviderResponse = await Promise.all([
+      odeServices.embedder().getDefault(),
+      odeServices.embedder().getCustom(),
+    ]).then((results) => results.flat());
+    setWhiteListProvider(whiteListProviderResponse);
+  };
+
+  function handleUrlChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const url: string = event.currentTarget.value;
+    setUrl(url);
+    if (url?.length) {
+      onSuccess(url);
+    } else {
+      onSuccess();
+    }
+  }
+
+  function handleSwitchToEmbedderClick() {
+    switchType("embedder");
+  }
+
+  return (
+    <div className="d-flex flex-column flex-fill">
+      <div className="mb-8 d-flex">
+        <Globe className="me-8"></Globe>
+        {t("URL de la vidéo")}
+      </div>
+      <FormControl id="iframeContent">
+        <Input
+          size="md"
+          type="text"
+          placeholder={t("www.exemple-video.com")}
+          onChange={handleUrlChange}
+        />
+      </FormControl>
+      {debounceChangeUrl && embedder && (
+        <div className="mx-auto mt-16">
+          <div className="video-embed-provider  d-flex align-items-center">
+            <Image
+              src={embedder.logo}
+              alt={"Logo " + embedder.displayName}
+              className="video-embed-provider__logo"
+            ></Image>
+            {embedder.displayName}
+          </div>
+          {embedVideo && (
+            <div
+              className="video-embed-preview mt-12"
+              dangerouslySetInnerHTML={{
+                __html: embedVideo,
+              }}
+            ></div>
+          )}
+        </div>
+      )}
+      {debounceChangeUrl && !embedder && (
+        <div className="d-flex flex-column align-items-center m-16">
+          <ImageNotFound height="150px" width="150px" />
+          <div className="h4 mt-16">
+            {t("Prévisualisation de la vidéo non disponible")}
+          </div>
+          <div className="mb-16">
+            {t(
+              "Le lien n'est pas reconnu, vous pouvez utiliser un code embed ou iframe, afin qu'elle s'affiche correctement.",
+            )}
+          </div>
+          <Button
+            variant="ghost"
+            color="secondary"
+            onClick={handleSwitchToEmbedderClick}
+            className="align-items-start"
+          >
+            {t("Utiliser un code embed ou iframe")} <ArrowRight />
+          </Button>
+        </div>
+      )}
+      {!debounceChangeUrl && (
+        <div className="d-flex my-16 align-items-start">
+          <Button
+            variant="ghost"
+            color="secondary"
+            onClick={handleSwitchToEmbedderClick}
+            className="align-items-start"
+          >
+            {t("Utiliser un code embed ou iframe")} <ArrowRight />
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default VideoEmbed;

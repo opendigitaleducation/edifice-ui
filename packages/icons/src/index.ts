@@ -52,6 +52,7 @@ export { default as HighlightColumn } from "./HighlightColumn";
 export { default as HighlightRow } from "./HighlightRow";
 export { default as Home } from "./Home";
 export { default as Hourglass } from "./Hourglass";
+export { default as ImageNotFound } from "./ImageNotFound";
 export { default as ImageSizeLarge } from "./ImageSizeLarge";
 export { default as ImageSizeMedium } from "./ImageSizeMedium";
 export { default as ImageSizeSmall } from "./ImageSizeSmall";
