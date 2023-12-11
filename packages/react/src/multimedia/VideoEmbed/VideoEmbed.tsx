@@ -85,7 +85,7 @@ const VideoEmbed = ({ onSuccess }: VideoEmbedProps) => {
               <Image
                 src={embedder.logo}
                 alt={"Logo " + embedder.displayName}
-                className="video-embed-provider__logo"
+                className="video-embed-provider-logo"
               ></Image>
               {embedder.displayName}
             </div>
