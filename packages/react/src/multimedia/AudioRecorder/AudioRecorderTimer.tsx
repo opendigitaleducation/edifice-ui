@@ -17,7 +17,7 @@ const AudioRecorderTimer = ({
   audiotime,
 }: AudioRecorderProps) => {
   return (
-    <div className="audio-recorder-time m-16">
+    <div className="audio-recorder-time m-16  mx-auto">
       {playState === "IDLE" && (
         <div className="d-flex align-items-center">
           {recordState === "PAUSED" ? (
@@ -29,7 +29,7 @@ const AudioRecorderTimer = ({
         </div>
       )}
       {playState !== "IDLE" && (
-        <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center mx-auto">
           <Mic width={12} height={12} className="me-8" />
           {convertMsToMS(audiotime! * 1000)} /{convertMsToMS(recordtime!)}
         </div>

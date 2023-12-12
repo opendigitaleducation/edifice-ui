@@ -92,6 +92,7 @@ export { default as RecordVideo } from "./RecordVideo";
 export { default as Record } from "./Record";
 export { default as Redo } from "./Redo";
 export { default as Refresh } from "./Refresh";
+export { default as Restart } from "./Restart";
 export { default as Retry } from "./Retry";
 export { default as Save } from "./Save";
 export { default as Search } from "./Search";
