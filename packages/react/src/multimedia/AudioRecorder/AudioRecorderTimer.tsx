@@ -6,18 +6,18 @@ import { convertMsToMS } from "../../utils";
 export interface AudioRecorderProps {
   recordState: RecordState;
   playState: PlayState;
-  recordtime: number | undefined;
-  audiotime: number | undefined;
+  recordTime: number | undefined;
+  audioTime: number;
 }
 
 const AudioRecorderTimer = ({
   recordState,
   playState,
-  recordtime,
-  audiotime,
+  recordTime,
+  audioTime,
 }: AudioRecorderProps) => {
   return (
-    <div className="audio-recorder-time m-16  mx-auto">
+    <div className="audio-recorder-time my-16 mx-auto">
       {playState === "IDLE" && (
         <div className="d-flex align-items-center">
           {recordState === "PAUSED" ? (
@@ -25,13 +25,13 @@ const AudioRecorderTimer = ({
           ) : (
             <Record width={12} height={12} className="me-8 text-danger" />
           )}
-          {convertMsToMS(recordState !== "IDLE" ? recordtime! : 0)}
+          {convertMsToMS(recordState !== "IDLE" ? recordTime! : 0)}
         </div>
       )}
       {playState !== "IDLE" && (
-        <div className="d-flex align-items-center mx-auto">
+        <div className="d-flex align-items-center">
           <Mic width={12} height={12} className="me-8" />
-          {convertMsToMS(audiotime! * 1000)} /{convertMsToMS(recordtime!)}
+          {audioTime} /{convertMsToMS(recordTime!)}
         </div>
       )}
     </div>

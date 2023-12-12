@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 
 import {
   Pause,
@@ -23,28 +23,74 @@ export type RecordState =
 
 export type PlayState = "IDLE" | "PLAYING" | "PAUSED";
 
+type AudioReducerState = {
+  recordState: RecordState;
+  playState: PlayState;
+
+  // The audio recorder is based on the Web Audio API (https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
+  // See also https://developer.mozilla.org/en-US/docs/Web/API/AudioWorkletNode for more information.
+  micStream?: MediaStream;
+  micStreamAudioSourceNode?: MediaStreamAudioSourceNode;
+  audioWorkletNode?: AudioWorkletNode;
+  audioContext?: AudioContext;
+
+  // encoder and web socket for sending encoded audio to the backend
+  encoderWorker?: Worker;
+  webSocket?: WebSocket | null;
+  compress?: boolean;
+  leftChannel: Float32Array[];
+  rightChannel: Float32Array[];
+};
+
 export default function useAudioRecorder(
   onSuccess: (resource: WorkspaceElement) => void,
   onError: (error: string) => void,
 ) {
-  const [recordState, setRecordState] = useState<RecordState>("IDLE");
-  const [playState, setPlayState] = useState<PlayState>("IDLE");
+  function audioReducer(
+    state: AudioReducerState,
+    action: {
+      type: "update" | "updateChannels";
+      updatedState?: Partial<AudioReducerState>;
+      updateChannels?: {
+        leftChannel: Float32Array;
+        rightChannel: Float32Array;
+      };
+    },
+  ): AudioReducerState {
+    if (action.type === "updateChannels" && action.updateChannels) {
+      return {
+        ...state,
+        leftChannel: [...state.leftChannel, action.updateChannels.leftChannel],
+        rightChannel: [
+          ...state.rightChannel,
+          action.updateChannels.rightChannel,
+        ],
+      };
+    }
+    return { ...state, ...action.updatedState };
+  }
 
-  // The audio recorder is based on the Web Audio API (https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
-  // See also https://developer.mozilla.org/en-US/docs/Web/API/AudioWorkletNode for more information.
-  const [micStream, setMicStream] = useState<MediaStream>();
-  const [micStreamAudioSourceNode, setMicStreamAudioSourceNode] =
-    useState<MediaStreamAudioSourceNode>();
-  const [audioWorkletNode, setAudioWorkletNode] = useState<AudioWorkletNode>();
-  const [audioContext, setAudioContext] = useState<AudioContext>();
-
-  // encoder and web socket for sending encoded audio to the backend
-  const [encoderWorker, setEncoderWorker] = useState<Worker>();
-  const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
-  const [compress, setCompress] = useState<boolean>(true);
-  const [leftChannel, setLeftChannel] = useState<Float32Array[]>([]);
-  const [rightChannel, setRigthChannel] = useState<Float32Array[]>([]);
-
+  const [
+    {
+      recordState,
+      playState,
+      micStream,
+      micStreamAudioSourceNode,
+      audioWorkletNode,
+      audioContext,
+      encoderWorker,
+      webSocket,
+      compress,
+      leftChannel,
+      rightChannel,
+    },
+    dispatch,
+  ] = useReducer(audioReducer, {
+    recordState: "IDLE",
+    playState: "IDLE",
+    leftChannel: [],
+    rightChannel: [],
+  });
   const audioNameRef = useRef<HTMLInputElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -56,7 +102,7 @@ export default function useAudioRecorder(
     const ws = new WebSocket(
       getUrl(audioContext?.sampleRate || DEFAULT_SAMPLE_RATE),
     );
-    setWebSocket(ws);
+    dispatch({ type: "update", updatedState: { webSocket: ws } });
 
     ws.onopen = () => {
       if (audioRef.current && audioRef.current.currentTime > 0) {
@@ -69,8 +115,10 @@ export default function useAudioRecorder(
     };
     ws.onerror = (event: Event) => {
       console.error(event);
-      setPlayState("IDLE");
-      setRecordState("IDLE");
+      dispatch({
+        type: "update",
+        updatedState: { playState: "IDLE", recordState: "IDLE" },
+      });
       closeWs();
     };
     ws.onclose = () => {
@@ -81,7 +129,7 @@ export default function useAudioRecorder(
       if (ws.readyState === 1) {
         ws.close();
       }
-      setWebSocket(null);
+      dispatch({ type: "update", updatedState: { webSocket: null } });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -89,7 +137,10 @@ export default function useAudioRecorder(
   // Init encoder worker
   useEffect(() => {
     const encoderWorker = new Worker("/infra/public/js/audioEncoder.js");
-    setEncoderWorker(encoderWorker);
+    dispatch({
+      type: "update",
+      updatedState: { encoderWorker: encoderWorker },
+    });
     encoderWorker.postMessage([
       "init",
       audioContext?.sampleRate || DEFAULT_SAMPLE_RATE,
@@ -116,8 +167,10 @@ export default function useAudioRecorder(
         event.data.indexOf("error") !== -1
       ) {
         console.error(event.data);
-        setPlayState("IDLE");
-        setRecordState("IDLE");
+        dispatch({
+          type: "update",
+          updatedState: { playState: "IDLE", recordState: "IDLE" },
+        });
         closeWs();
       } else if (
         event.data &&
@@ -147,9 +200,9 @@ export default function useAudioRecorder(
           }
 
           closeAudioStream();
-          setRecordState("SAVED");
+          dispatch({ type: "update", updatedState: { recordState: "SAVED" } });
         } else {
-          setRecordState("IDLE");
+          dispatch({ type: "update", updatedState: { recordState: "IDLE" } });
           closeWs();
         }
       }
@@ -170,8 +223,13 @@ export default function useAudioRecorder(
     (event: MessageEvent) => {
       const leftChannel = (event.data.inputs as Float32Array[][])[0][0];
       const rightChannel = (event.data.inputs as Float32Array[][])[0][1];
-      setLeftChannel((prev) => [...prev, leftChannel]);
-      setRigthChannel((prev) => [...prev, rightChannel]);
+      dispatch({
+        type: "updateChannels",
+        updateChannels: {
+          leftChannel: leftChannel,
+          rightChannel: rightChannel,
+        },
+      });
 
       if (encoderWorker) {
         // send audio data to encoder worker
@@ -195,7 +253,7 @@ export default function useAudioRecorder(
           webSocket?.send(pako.deflate(encodedData));
           const endTime = performance.now();
           if (endTime - initialTime > 50) {
-            setCompress(false);
+            dispatch({ type: "update", updatedState: { compress: false } });
             webSocket?.send("rawdata");
           }
         };
@@ -231,14 +289,19 @@ export default function useAudioRecorder(
     const micStream: MediaStream = await navigator.mediaDevices.getUserMedia({
       audio: true,
     });
-    setMicStream(micStream);
 
     // Create the microphone stream
     const audioContext = new AudioContext({ sampleRate: DEFAULT_SAMPLE_RATE });
-    setAudioContext(audioContext);
     const micStreamAudioSourceNode: MediaStreamAudioSourceNode =
       audioContext.createMediaStreamSource(micStream);
-    setMicStreamAudioSourceNode(micStreamAudioSourceNode);
+    dispatch({
+      type: "update",
+      updatedState: {
+        micStream,
+        micStreamAudioSourceNode,
+        audioContext,
+      },
+    });
 
     // Create and connect AudioWorkletNode for processing the audio stream
     // https://developer.mozilla.org/en-US/docs/Web/API/AudioWorkletProcessor
@@ -254,7 +317,6 @@ export default function useAudioRecorder(
       audioContext,
       "audio-recorder-processor",
     );
-    setAudioWorkletNode(audioWorkletNode);
 
     // Message received from the audio recorder processor. cf handleAudioWorkletNodeMessage function.
     // Basically the Audio recorder processor returns the input channels that will be treated by the audioEncoder worker.
@@ -263,9 +325,15 @@ export default function useAudioRecorder(
       handleAudioWorkletNodeMessage,
     );
 
-    // Clear channels before strating recording
-    setLeftChannel([]);
-    setRigthChannel([]);
+    dispatch({
+      type: "update",
+      updatedState: {
+        audioWorkletNode,
+        // Clear channels before strating recording
+        leftChannel: [],
+        rightChannel: [],
+      },
+    });
 
     audioWorkletNode.port.start();
 
@@ -274,15 +342,17 @@ export default function useAudioRecorder(
   };
 
   const handleRecord = async () => {
-    setRecordState("RECORDING");
-    setPlayState("IDLE");
+    dispatch({
+      type: "update",
+      updatedState: { recordState: "RECORDING", playState: "IDLE" },
+    });
 
     await initRecording();
   };
 
   const handleRecordPause = useCallback(() => {
     if (audioContext?.state === "running") {
-      setRecordState("PAUSED");
+      dispatch({ type: "update", updatedState: { recordState: "PAUSED" } });
       audioContext?.suspend();
       if (encoderWorker) {
         encoderWorker.postMessage([
@@ -298,7 +368,7 @@ export default function useAudioRecorder(
         };
       }
     } else {
-      setRecordState("RECORDING");
+      dispatch({ type: "update", updatedState: { recordState: "RECORDING" } });
       audioContext?.resume();
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
@@ -307,7 +377,7 @@ export default function useAudioRecorder(
   }, [audioContext, encoderWorker, leftChannel, rightChannel]);
 
   const handlePlay = useCallback(() => {
-    setPlayState("PLAYING");
+    dispatch({ type: "update", updatedState: { playState: "PLAYING" } });
     if (audioRef?.current?.currentTime) {
       audioRef.current.play();
     } else {
@@ -319,19 +389,24 @@ export default function useAudioRecorder(
 
   const handlePlayPause = useCallback(() => {
     audioRef?.current?.pause();
-    setPlayState("PAUSED");
-  }, []);
+    dispatch({ type: "update", updatedState: { playState: "PAUSED" } });
+  }, [audioRef]);
 
   const handleReset = useCallback(() => {
-    setPlayState("IDLE");
-    setRecordState("IDLE");
     closeAudioStream();
-    setLeftChannel([]);
-    setRigthChannel([]);
+    dispatch({
+      type: "update",
+      updatedState: {
+        playState: "IDLE",
+        recordState: "IDLE",
+        leftChannel: [],
+        rightChannel: [],
+      },
+    });
   }, [closeAudioStream]);
 
   const handleSave = useCallback(() => {
-    setRecordState("SAVING");
+    dispatch({ type: "update", updatedState: { recordState: "SAVING" } });
 
     webSocket?.send(`save-${audioNameRef.current?.value}`);
   }, [webSocket]);
@@ -342,15 +417,15 @@ export default function useAudioRecorder(
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
-    setPlayState("IDLE");
-  }, []);
+    dispatch({ type: "update", updatedState: { playState: "IDLE" } });
+  }, [audioRef]);
 
   const handlePlayEnded = useCallback(() => {
-    setPlayState("PAUSED");
+    dispatch({ type: "update", updatedState: { playState: "PAUSED" } });
     if (audioRef.current) {
       audioRef.current.currentTime = 0;
     }
-  }, []);
+  }, [audioRef]);
 
   function uuid() {
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
@@ -386,7 +461,7 @@ export default function useAudioRecorder(
   }
 
   function clearWs() {
-    setWebSocket(null);
+    dispatch({ type: "update", updatedState: { webSocket: null } });
   }
 
   const toolbarItems: ToolbarItem[] = [

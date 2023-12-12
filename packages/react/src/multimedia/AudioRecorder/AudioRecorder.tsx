@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Mic } from "@edifice-ui/icons";
 import clsx from "clsx";
 import { WorkspaceElement } from "edifice-ts-client";
@@ -5,6 +7,7 @@ import { WorkspaceElement } from "edifice-ts-client";
 import AudioRecorderTimer from "./AudioRecorderTimer";
 import useAudioRecorder from "./useAudioRecorder";
 import { FormControl, Input, Toolbar } from "../../components";
+import { convertMsToMS } from "../../utils";
 
 export interface AudioRecorderProps {
   onSuccess: (resource: WorkspaceElement) => void;
@@ -22,10 +25,16 @@ const AudioRecorder = ({ onSuccess, onError }: AudioRecorderProps) => {
     handlePlayEnded,
   } = useAudioRecorder(onSuccess, onError);
 
+  const [audioTime, setAudioTime] = useState<string>();
+
   const classColor = clsx({
     "text-danger": recordState === "RECORDING",
     "text-success": playState === "PLAYING",
   });
+
+  const handleTimeUpdate = (event: any) => {
+    setAudioTime(convertMsToMS(event.target.currentTime! * 1000));
+  };
 
   return (
     <div className="audio-recorder m-auto d-flex flex-column">
@@ -49,10 +58,14 @@ const AudioRecorder = ({ onSuccess, onError }: AudioRecorderProps) => {
       <AudioRecorderTimer
         recordState={recordState}
         playState={playState}
-        recordtime={recordtime}
-        audiotime={audioRef.current?.currentTime}
+        recordTime={recordtime}
+        audioTime={audioTime}
       ></AudioRecorderTimer>
-      <audio ref={audioRef} onEnded={handlePlayEnded}>
+      <audio
+        ref={audioRef}
+        onEnded={handlePlayEnded}
+        onTimeUpdate={handleTimeUpdate}
+      >
         <track default kind="captions" srcLang="fr" src=""></track>
       </audio>
       <Toolbar items={toolbarItems} />
