@@ -65,7 +65,7 @@ const VideoEmbed = ({ onSuccess }: VideoEmbedProps) => {
   function handleUrlChange(event: React.ChangeEvent<HTMLInputElement>) {
     const url: string = event.currentTarget.value;
     setUrl(url);
-    if (url?.length) {
+    onSuccess( url?.length ? url : undefined );
       onSuccess(url);
     } else {
       onSuccess();
