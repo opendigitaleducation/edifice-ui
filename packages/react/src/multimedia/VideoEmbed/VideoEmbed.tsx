@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 
 import { ArrowRight, Globe } from "@edifice-ui/icons";
 import { Embedder, odeServices } from "edifice-ts-client";
@@ -27,6 +27,7 @@ const VideoEmbed = ({ onSuccess }: VideoEmbedProps) => {
   const debounceChangeUrl = useDebounce<string>(url || "", 300);
   const [whiteListProvider, setWhiteListProvider] = useState<Embedder[]>();
   const { switchType } = useMediaLibraryContext();
+  const formControlId = useId();
 
   const [imagePath] = usePaths();
 
@@ -65,11 +66,7 @@ const VideoEmbed = ({ onSuccess }: VideoEmbedProps) => {
   function handleUrlChange(event: React.ChangeEvent<HTMLInputElement>) {
     const url: string = event.currentTarget.value;
     setUrl(url);
-    onSuccess( url?.length ? url : undefined );
-      onSuccess(url);
-    } else {
-      onSuccess();
-    }
+    onSuccess(url?.length ? url : undefined);
   }
 
   function handleSwitchToEmbedderClick() {
@@ -142,7 +139,7 @@ const VideoEmbed = ({ onSuccess }: VideoEmbedProps) => {
         <Globe className="me-8"></Globe>
         {t("URL de la vidéo")}
       </div>
-      <FormControl id="iframeContent">
+      <FormControl id={formControlId}>
         <Input
           size="md"
           type="text"
