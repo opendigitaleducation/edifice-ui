@@ -52,6 +52,7 @@
     "@tiptap/extension-underline": "2.0.3",
     "@tiptap/extension-image": "2.0.3",
     "@edifice-tiptap-extensions/extension-attachment": "develop-b2school",
+    "@edifice-tiptap-extensions/extension-audio": "develop-b2school",
     "@edifice-tiptap-extensions/extension-video": "develop-b2school",
     "@edifice-tiptap-extensions/extension-image": "develop-b2school",
     "@tiptap/pm": "2.0.3",
