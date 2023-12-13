@@ -18,7 +18,13 @@ interface ButtonSize {
   };
 }
 
-const BubbleMenuEditImage = ({ editor }: { editor: Editor }) => {
+const BubbleMenuEditImage = ({
+  editor,
+  onEditImage,
+}: {
+  editor: Editor;
+  onEditImage: () => void;
+}) => {
   const { t } = useTranslation();
 
   const buttonSizeList = [
@@ -71,7 +77,7 @@ const BubbleMenuEditImage = ({ editor }: { editor: Editor }) => {
         variant="ghost"
         leftIcon={<Wand />}
         color="secondary"
-        //onClick={() => } Afficher la modal d'edit modal
+        onClick={onEditImage}
       >
         {t("edit.image")}
       </Button>

@@ -13,4 +13,5 @@ export * from "./useSession";
 export * from "./useUploadFiles";
 export * from "./useUser";
 export * from "./useWorkspaceSearch";
+export * from "./useWorkspaceFile";
 export * from "./useXitiTrackPageLoad";

@@ -5,3 +5,4 @@ export * from "./Linker";
 export * from "./LinkerCard";
 export * from "./AudioRecorder";
 export * from "./Embed";
+export * from "./ImageEditor";
