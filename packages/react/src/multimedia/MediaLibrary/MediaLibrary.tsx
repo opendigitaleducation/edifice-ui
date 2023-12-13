@@ -45,6 +45,7 @@ const orderedTabs = [
   "iframe", // Framed website
   "upload", // Filesystem browser + drag'n'drop of files
   "workspace", // Media browser
+  "video-embedder", // Link to a hosted video
 ];
 
 /**
@@ -254,6 +255,14 @@ const MediaLibrary = forwardRef(
         availableFor: ["embedder"],
         isEnable: null,
       },
+      "video-embedder": {
+        id: "iframe",
+        icon: <Code />,
+        label: t("Balise embed ou iframe"),
+        content: <InnerTabs.VideoEmbedder />,
+        availableFor: ["video"],
+        isEnable: null,
+      },
     };
 
     // --------------- Hooks
@@ -291,6 +300,12 @@ const MediaLibrary = forwardRef(
       if (index < 0) throw "tab.not.visible";
       // TODO améliorer le composant Tabs pour pouvoir le piloter depuis le parent.
       throw "not.implemented.yet";
+    }
+
+    function switchType(type: MediaLibraryType) {
+      setLinkTabProps(undefined);
+      setDefaultTabId(undefined);
+      setType(type);
     }
 
     // --------------- Imperative functions
@@ -353,6 +368,7 @@ const MediaLibrary = forwardRef(
           setResultCounter,
           setResult,
           setVisibleTab,
+          switchType,
         }}
       >
         <Modal

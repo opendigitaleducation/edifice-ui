@@ -33,6 +33,6 @@ dist-ssr
 *.tgz
 
 # NPM
-# .npmrc
+.npmrc
 .vercel
 .env*.local

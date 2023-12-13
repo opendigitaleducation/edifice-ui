@@ -57,6 +57,9 @@ const Tabs = ({ defaultId, items, onChange, children }: TabsProps) => {
   useEffect(() => {
     function setTabPosition() {
       const currentTabIndex = items.findIndex((item) => item.id === activeTab);
+      if (currentTabIndex === -1 && defaultId) {
+        setActiveTab(defaultId);
+      }
       const currentTabRef = tabsRef.current[currentTabIndex];
       if (currentTabRef) {
         currentTabRef.focus();
@@ -69,7 +72,7 @@ const Tabs = ({ defaultId, items, onChange, children }: TabsProps) => {
     window.addEventListener("resize", setTabPosition);
 
     return () => window.removeEventListener("resize", setTabPosition);
-  }, [activeTab, items]);
+  }, [activeTab, items, defaultId]);
 
   const moveFocusToPreviousTab = useCallback(
     (activeTab: string) => {

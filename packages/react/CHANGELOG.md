@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.1](https://github.com/opendigitaleducation/edifice-ui/compare/v1.3.0...v1.3.1) (2023-12-12)
+
+### Bug Fixes
+
+- **react:** fix issues with dropdown components ([301140e](https://github.com/opendigitaleducation/edifice-ui/commit/301140e97c9e4ef190b2c6808638bbea7370980a))
+
 # 1.3.0 (2023-11-28)
 
 ### Bug Fixes

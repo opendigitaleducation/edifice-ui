@@ -28,6 +28,11 @@ export const MediaLibraryContext = createContext<{
    * This function will throw an error if switching failed.
    */
   setVisibleTab: (tab: AvailableTab) => void;
+
+  /**
+   * Allow an innertab to switch type of the media library.
+   */
+  switchType: (type: MediaLibraryType) => void;
 }>(null!);
 
 export function useMediaLibraryContext() {
