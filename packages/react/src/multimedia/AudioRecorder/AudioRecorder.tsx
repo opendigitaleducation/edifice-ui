@@ -7,7 +7,6 @@ import { WorkspaceElement } from "edifice-ts-client";
 import AudioRecorderTimer from "./AudioRecorderTimer";
 import useAudioRecorder from "./useAudioRecorder";
 import { FormControl, Input, Toolbar } from "../../components";
-import { convertMsToMS } from "../../utils";
 
 export interface AudioRecorderProps {
   onSuccess: (resource: WorkspaceElement) => void;
@@ -25,7 +24,7 @@ const AudioRecorder = ({ onSuccess, onError }: AudioRecorderProps) => {
     handlePlayEnded,
   } = useAudioRecorder(onSuccess, onError);
 
-  const [audioTime, setAudioTime] = useState<string>();
+  const [audioTime, setAudioTime] = useState<number>(0);
 
   const classColor = clsx({
     "text-danger": recordState === "RECORDING",
@@ -33,7 +32,7 @@ const AudioRecorder = ({ onSuccess, onError }: AudioRecorderProps) => {
   });
 
   const handleTimeUpdate = (event: any) => {
-    setAudioTime(convertMsToMS(event.target.currentTime! * 1000));
+    setAudioTime(event.target.currentTime);
   };
 
   return (
