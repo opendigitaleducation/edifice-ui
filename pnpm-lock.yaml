@@ -137,6 +137,9 @@ importers:
       '@edifice-tiptap-extensions/extension-attachment':
         specifier: develop-b2school
         version: 1.0.0-develop-b2school.2(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
+      '@edifice-tiptap-extensions/extension-audio':
+        specifier: develop-b2school
+        version: 1.0.0-develop-b2school.1(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
       '@edifice-tiptap-extensions/extension-image':
         specifier: develop-b2school
         version: 1.0.0-develop-b2school.2(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
@@ -2605,6 +2608,16 @@ packages:
 
   /@edifice-tiptap-extensions/extension-attachment@1.0.0-develop-b2school.2(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3):
     resolution: {integrity: sha512-OVAm0/R3QB6tU+zVAVAMNE5nc9bAYqE1pPbxY/5AGjf/2PaarQQyW4ZHt44tayWCwgBYbP0xFlqCGCw+AKR/lQ==}
+    peerDependencies:
+      '@tiptap/core': 2.0.3
+      '@tiptap/pm': 2.0.3
+    dependencies:
+      '@tiptap/core': 2.0.3(@tiptap/pm@2.0.3)
+      '@tiptap/pm': 2.0.3(@tiptap/core@2.0.3)
+    dev: false
+
+  /@edifice-tiptap-extensions/extension-audio@1.0.0-develop-b2school.1(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3):
+    resolution: {integrity: sha512-xsm1RQBlEo7igFhLpzWajopPUrHjLOF6tuU0BytESDmnTc4osA3ngXYb2/yjHJ84Ib8cSp1NVWsgj2ryyusOQw==}
     peerDependencies:
       '@tiptap/core': 2.0.3
       '@tiptap/pm': 2.0.3
