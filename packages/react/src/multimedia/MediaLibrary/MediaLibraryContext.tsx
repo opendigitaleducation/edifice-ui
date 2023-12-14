@@ -1,6 +1,10 @@
 import { createContext, useContext } from "react";
 
-import { MediaLibraryType, AvailableTab } from "./MediaLibrary";
+import {
+  MediaLibraryType,
+  AvailableTab,
+  MediaLibraryResult,
+} from "./MediaLibrary";
 
 export const MediaLibraryContext = createContext<{
   /**
@@ -33,6 +37,13 @@ export const MediaLibraryContext = createContext<{
    * Allow an innertab to switch type of the media library.
    */
   switchType: (type: MediaLibraryType) => void;
+
+  /**
+   * Allow an innertab to set action to execute before triggering onSuccess.
+   */
+  setOnSuccessAction: (
+    onSuccessAction: () => () => Promise<MediaLibraryResult>,
+  ) => void;
 }>(null!);
 
 export function useMediaLibraryContext() {

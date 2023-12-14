@@ -6,6 +6,7 @@ import {
   Ref,
   useState,
   useEffect,
+  useCallback,
 } from "react";
 
 import {
@@ -294,6 +295,8 @@ const MediaLibrary = forwardRef(
     // Stateful contextual values
     const [resultCounter, setResultCounter] = useState<number | undefined>();
     const [result, setResult] = useState<MediaLibraryResult | undefined>();
+    const [onSuccessAction, setOnSuccessAction] =
+      useState<() => Promise<MediaLibraryResult>>();
 
     function setVisibleTab(tab: AvailableTab) {
       const index = tabs.findIndex((t) => t.id === tab);
@@ -348,11 +351,18 @@ const MediaLibrary = forwardRef(
       setDefaultTabId(undefined);
     };
 
-    const handleOnSuccess = () => {
-      if (result) onSuccess(result);
+    const handleOnSuccess = useCallback(() => {
+      if (onSuccessAction) {
+        onSuccessAction().then((result) => {
+          onSuccess(result);
+        });
+      } else if (result) {
+        onSuccess(result);
+      }
+
       setLinkTabProps(undefined);
       setDefaultTabId(undefined);
-    };
+    }, [onSuccess, onSuccessAction, result]);
 
     const handleOnCancel = () => {
       onCancel();
@@ -369,6 +379,7 @@ const MediaLibrary = forwardRef(
           setResult,
           setVisibleTab,
           switchType,
+          setOnSuccessAction,
         }}
       >
         <Modal
