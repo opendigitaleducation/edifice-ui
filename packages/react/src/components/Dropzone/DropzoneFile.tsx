@@ -21,7 +21,7 @@ const DropzoneFile = ({ children }: { children: ReactNode }) => {
   return (
     <div className={classes}>
       <div className="drop-file-content">
-        <div className="add-button m-4">
+        <div className="add-button p-4">
           <Button
             variant="ghost"
             leftIcon={<Plus></Plus>}

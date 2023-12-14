@@ -86,7 +86,10 @@ const BubbleMenuEditImage = ({
         <IconButton
           key={index}
           className={
-            selectedNode?.attrs?.size === button.sizeName ? "is-selected" : ""
+            selectedNode?.attrs?.size === button.sizeName &&
+            selectedNode?.attrs?.width === button.size.width
+              ? "is-selected"
+              : ""
           }
           icon={button.icon}
           variant="ghost"

@@ -41,6 +41,7 @@ const AttachmentRenderer = (props: AttachmentProps) => {
             borderRadius: ".8rem",
             padding: "1.2rem",
           }}
+          data-drag-handle
         >
           <p className="m-12 mt-0">{t("editor.attachments.bloc")}</p>
           <Grid>

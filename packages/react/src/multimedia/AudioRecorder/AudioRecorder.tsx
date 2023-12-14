@@ -3,6 +3,7 @@ import { useState, forwardRef, useImperativeHandle } from "react";
 import { Mic } from "@edifice-ui/icons";
 import clsx from "clsx";
 import { WorkspaceElement } from "edifice-ts-client";
+import { useTranslation } from "react-i18next";
 
 import AudioRecorderTimer from "./AudioRecorderTimer";
 import useAudioRecorder from "./useAudioRecorder";
@@ -37,6 +38,7 @@ const AudioRecorder = forwardRef(
       handlePlayEnded,
       handleSave,
     } = useAudioRecorder(onSaveSuccess, onRecordUpdated, hideSaveAction);
+    const { t } = useTranslation();
 
     // We add one methods to handle save action from parent component
     useImperativeHandle(ref, () => ({
@@ -65,9 +67,9 @@ const AudioRecorder = forwardRef(
           <Input
             type="text"
             size={"sm"}
-            placeholder="Nom de l'enregistrement audio"
+            placeholder={t("Nom de l'enregistrement audio")}
             ref={audioNameRef}
-            defaultValue={"Capture " + new Date().toLocaleDateString()}
+            defaultValue={t("Capture ") + new Date().toLocaleDateString()}
           />
         </FormControl>
         <div className="audio-recorder-icon mx-auto ">

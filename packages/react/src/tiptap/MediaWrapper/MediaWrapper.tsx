@@ -26,27 +26,29 @@ const MediaWrapper = (props: MediaResizeProps) => {
         className="media-node-view"
         style={{ position: "relative", width: "fit-content" }}
       >
-        {node.attrs["media-type"] === "img" ? (
-          <Image
-            {...node.attrs}
-            className={`custum-image`}
-            ref={resizableMedia as React.RefObject<HTMLImageElement>}
-          />
-        ) : (
-          // eslint-disable-next-line jsx-a11y/media-has-caption
-          <video
-            ref={resizableMedia as React.RefObject<HTMLVideoElement>}
-            controls={node.attrs.controls}
-            src={node.attrs.src}
-            width={node.attrs.width}
-            height={node.attrs.height}
-            data-video-resolution={`${node.attrs.width}x${node.attrs.height}`}
-            data-document-id={node.attrs.documentId}
-            data-document-is-captation={node.attrs.isCaptation}
-          >
-            <source src={node.attrs.src} />
-          </video>
-        )}
+        <div data-drag-handle>
+          {node.attrs["media-type"] === "img" ? (
+            <Image
+              {...node.attrs}
+              className={`custum-image`}
+              ref={resizableMedia as React.RefObject<HTMLImageElement>}
+            />
+          ) : (
+            // eslint-disable-next-line jsx-a11y/media-has-caption
+            <video
+              ref={resizableMedia as React.RefObject<HTMLVideoElement>}
+              controls={node.attrs.controls}
+              src={node.attrs.src}
+              width={node.attrs.width}
+              height={node.attrs.height}
+              data-video-resolution={`${node.attrs.width}x${node.attrs.height}`}
+              data-document-id={node.attrs.documentId}
+              data-document-is-captation={node.attrs.isCaptation}
+            >
+              <source src={node.attrs.src} />
+            </video>
+          )}
+        </div>
 
         <div
           className={`horizontal-resize-handle ${

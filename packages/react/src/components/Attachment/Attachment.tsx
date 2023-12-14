@@ -24,7 +24,7 @@ const Attachment = forwardRef(
       <div ref={ref} className="attachment px-12 py-8" {...restProps}>
         <div className="filename">
           <Paperclip height={22} width={22} />
-          <p className="body text-truncate">{name}</p>
+          <p className="text-truncate">{name}</p>
         </div>
         <div className="options ps-12">{options}</div>
       </div>
