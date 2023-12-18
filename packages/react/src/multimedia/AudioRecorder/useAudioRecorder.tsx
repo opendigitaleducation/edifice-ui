@@ -4,6 +4,7 @@ import {
   Pause,
   PlayFilled,
   Record,
+  RecordPause,
   Refresh,
   Restart,
   Save,
@@ -503,29 +504,22 @@ export default function useAudioRecorder(
     {
       type: "icon",
       name: "record",
-      visibility:
-        recordState === "RECORDING" || recordState === "PAUSED"
-          ? "hide"
-          : "show",
+      visibility: recordState === "RECORDING" ? "hide" : "show",
       props: {
-        icon: <Record color="" />,
+        icon: <Record />,
         color: "danger",
-        disabled: recordState !== "IDLE",
+        disabled: recordState !== "IDLE" && recordState !== "PAUSED",
         onClick: handleRecord,
       },
     },
     {
       type: "icon",
       name: "recordPause",
-      visibility:
-        recordState === "RECORDING" || recordState === "PAUSED"
-          ? "show"
-          : "hide",
+      visibility: recordState === "RECORDING" ? "show" : "hide",
       props: {
-        icon: (
-          <Pause className={recordState === "PAUSED" ? "text-danger" : ""} />
-        ),
-        disabled: recordState !== "RECORDING" && recordState !== "PAUSED",
+        icon: <RecordPause />,
+        color: "danger",
+        disabled: recordState !== "RECORDING",
         onClick: handleRecordPause,
       },
     },
