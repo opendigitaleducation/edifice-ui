@@ -44,7 +44,7 @@ type AudioReducerState = {
 
 export default function useAudioRecorder(
   onSaveSuccess?: (resource: WorkspaceElement) => void,
-  onUpdateRecord?: (audioUrl: string) => void,
+  onUpdateRecord?: (audioUrl?: string) => void,
   hideSaveAction: boolean = false,
 ) {
   function audioReducer(
@@ -373,7 +373,11 @@ export default function useAudioRecorder(
         rightChannel: [],
       },
     });
-  }, [closeAudioStream]);
+
+    if (onUpdateRecord) {
+      onUpdateRecord(undefined);
+    }
+  }, [closeAudioStream, onUpdateRecord]);
 
   const handleSave: () => Promise<WorkspaceElement | undefined> =
     useCallback(async () => {

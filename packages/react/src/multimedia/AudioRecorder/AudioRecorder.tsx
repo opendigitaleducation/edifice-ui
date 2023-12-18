@@ -11,7 +11,7 @@ import { FormControl, Input, Toolbar } from "../../components";
 
 export interface AudioRecorderProps {
   onSaveSuccess?: (resource: WorkspaceElement) => void;
-  onRecordUpdated?: (recordURL: string) => void;
+  onRecordUpdated?: (recordURL?: string) => void;
   hideSaveAction?: boolean;
 }
 
