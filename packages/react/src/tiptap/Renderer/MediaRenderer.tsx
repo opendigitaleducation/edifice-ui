@@ -6,7 +6,7 @@ import { NodeViewWrapper } from "@tiptap/react";
 import { Image } from "../../components";
 import { MediaResizeProps, useResizeMedia } from "../../hooks/useResizeMedia";
 
-const MediaWrapper = (props: MediaResizeProps) => {
+const MediaRenderer = (props: MediaResizeProps) => {
   const { node } = props;
 
   const resizableMedia = useRef<HTMLImageElement | HTMLVideoElement>(null);
@@ -72,4 +72,4 @@ const MediaWrapper = (props: MediaResizeProps) => {
   );
 };
 
-export default MediaWrapper;
+export default MediaRenderer;
