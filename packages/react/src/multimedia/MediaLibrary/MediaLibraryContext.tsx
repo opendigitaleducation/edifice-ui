@@ -41,7 +41,7 @@ export const MediaLibraryContext = createContext<{
   /**
    * Allow an innertab to set action to execute before triggering onSuccess.
    */
-  setOnSuccessAction: (
+  setPreSuccess: (
     onSuccessAction: () => () => Promise<MediaLibraryResult>,
   ) => void;
 }>(null!);

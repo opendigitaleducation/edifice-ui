@@ -5,13 +5,13 @@ import { AudioRecorderRef } from "../../AudioRecorder/AudioRecorder";
 import { useMediaLibraryContext } from "../MediaLibraryContext";
 
 export const Audio = () => {
-  const { setResult, setOnSuccessAction } = useMediaLibraryContext();
+  const { setResult, setPreSuccess } = useMediaLibraryContext();
   const ref = useRef<AudioRecorderRef>(null);
 
   const handleOnUpdateRecord = (recordURL?: string) => {
     if (recordURL) {
       setResult(recordURL);
-      setOnSuccessAction(() => ref.current!.save);
+      setPreSuccess(() => ref.current!.save);
     } else {
       setResult();
     }

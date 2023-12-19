@@ -295,7 +295,7 @@ const MediaLibrary = forwardRef(
     // Stateful contextual values
     const [resultCounter, setResultCounter] = useState<number | undefined>();
     const [result, setResult] = useState<MediaLibraryResult | undefined>();
-    const [onSuccessAction, setOnSuccessAction] =
+    const [onSuccessAction, setPreSuccess] =
       useState<() => Promise<MediaLibraryResult>>();
 
     function setVisibleTab(tab: AvailableTab) {
@@ -379,7 +379,7 @@ const MediaLibrary = forwardRef(
           setResult,
           setVisibleTab,
           switchType,
-          setOnSuccessAction,
+          setPreSuccess,
         }}
       >
         <Modal

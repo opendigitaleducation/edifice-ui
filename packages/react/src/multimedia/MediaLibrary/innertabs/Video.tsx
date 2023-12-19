@@ -7,14 +7,14 @@ import { VideoRecorderRef } from "../../VideoRecorder/VideoRecorder";
 import { useMediaLibraryContext } from "../MediaLibraryContext";
 
 export const Video = () => {
-  const { appCode, setResult, setOnSuccessAction } = useMediaLibraryContext();
+  const { appCode, setResult, setPreSuccess } = useMediaLibraryContext();
   const { t } = useTranslation();
   const ref = useRef<VideoRecorderRef>(null);
 
   const handleRecordUpdated = (recordUrl?: string) => {
     if (recordUrl) {
       setResult(recordUrl);
-      setOnSuccessAction(() => ref.current!.save);
+      setPreSuccess(() => ref.current!.save);
     } else {
       setResult();
     }
