@@ -1,0 +1,90 @@
+{
+  "name": "@edifice-ui/explorer",
+  "version": "1.0.0",
+  "description": "Edifice Explorer Component",
+  "keywords": [
+    "react",
+    "frontend",
+    "component",
+    "component",
+    "ui"
+  ],
+  "homepage": "https://github.com/opendigitaleducation/edifice-ui/tree/main/packages/explorer#readme",
+  "bugs": {
+    "url": "https://github.com/opendigitaleducation/edifice-ui/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opendigitaleducation/edifice-ui.git"
+  },
+  "license": "AGPL-3.0",
+  "author": "Edifice",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "fix": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "format": "concurrently \"pnpm:format:*\"",
+    "format:check": "prettier --check .",
+    "format:write": "prettier --write .",
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "ohash": "1.1.3",
+    "react-slugify": "3.0.3",
+    "swiper": "10.0.3",
+    "dayjs": "1.11.10"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-react-pure-annotations": "7.23.3",
+    "@edifice-ui/icons": "^1.3.0",
+    "@edifice-ui/react": "^1.3.1",
+    "@react-spring/web": "9.7.3",
+    "@tanstack/react-query": "4.36.1",
+    "@types/node": "20.8.4",
+    "@types/react": "18.2.28",
+    "@types/react-dom": "18.2.13",
+    "clsx": "2.0.0",
+    "concurrently": "8.2.1",
+    "edifice-ts-client": "develop",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-hook-form": "7.49.2",
+    "react-i18next": "13.5.0",
+    "i18next": "23.7.6",
+    "i18next-http-backend": "2.4.2",
+    "zustand": "4.4.6",
+    "vite-tsconfig-paths": "4.2.1"
+  },
+  "peerDependencies": {
+    "@edifice-ui/react": "*",
+    "@edifice-ui/icons": "*",
+    "@react-spring/web": "9.7.3",
+    "@tanstack/react-query": "4.36.1",
+    "clsx": "2.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-hook-form": "7.49.2",
+    "react-i18next": "13.5.0",
+    "i18next": "23.7.6",
+    "i18next-http-backend": "2.4.2",
+    "zustand": "4.4.6"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "3e1c3f5b48505564db1b70aab22063a70336f3b0"
+}
