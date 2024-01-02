@@ -5,7 +5,7 @@ export const Iframe = () => {
   const { setResult } = useMediaLibraryContext();
 
   const handleOnSuccess = (ressource?: string) => {
-    setResult([ressource]);
+    setResult(ressource);
   };
 
   return <Embed onSuccess={handleOnSuccess}></Embed>;

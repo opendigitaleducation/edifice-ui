@@ -23,7 +23,7 @@ const VideoEmbed = ({ onSuccess }: VideoEmbedProps) => {
   const { t } = useTranslation();
   const [url, setUrl] = useState<string>();
   const [embedVideo, setEmbedVideo] = useState<string>();
-  const [embedder, setEmbbeder] = useState<Embedder | undefined>(undefined);
+  const [embedder, setEmbeder] = useState<Embedder | undefined>(undefined);
   const debounceChangeUrl = useDebounce<string>(url || "", 300);
   const [whiteListProvider, setWhiteListProvider] = useState<Embedder[]>();
   const { switchType } = useMediaLibraryContext();
@@ -41,14 +41,14 @@ const VideoEmbed = ({ onSuccess }: VideoEmbedProps) => {
         .embedder()
         .getProviderFromUrl(whiteListProvider, debounceChangeUrl);
       if (embedderFound) {
-        setEmbbeder(embedderFound);
+        setEmbeder(embedderFound);
         const embedVideo = odeServices
           .embedder()
           .getEmbedCodeForProvider(embedderFound, debounceChangeUrl);
         setEmbedVideo(embedVideo);
         onSuccess(embedVideo);
       } else {
-        setEmbbeder(undefined);
+        setEmbeder(undefined);
         onSuccess();
       }
     }

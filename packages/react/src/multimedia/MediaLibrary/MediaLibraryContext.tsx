@@ -25,7 +25,7 @@ export const MediaLibraryContext = createContext<{
   /**
    * Set a innertab-specific callback which gets the result when success button is clicked
    */
-  setResult: (result?: any) => void;
+  setResult: (result?: MediaLibraryResult) => void;
 
   /**
    * Allow an innertab to switch display to another innertab.
