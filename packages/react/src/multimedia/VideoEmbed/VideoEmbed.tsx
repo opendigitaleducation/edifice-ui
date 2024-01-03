@@ -41,7 +41,7 @@ const VideoEmbed = ({ onSuccess }: VideoEmbedProps) => {
         .embedder()
         .getProviderFromUrl(whiteListProvider, debounceChangeUrl);
       if (embedderFound) {
-        setEmbeder(embedderFound);
+        setEmbedder(embedderFound);
         const embedVideo = odeServices
           .embedder()
           .getEmbedCodeForProvider(embedderFound, debounceChangeUrl);
