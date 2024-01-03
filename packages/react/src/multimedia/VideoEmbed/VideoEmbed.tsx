@@ -48,7 +48,7 @@ const VideoEmbed = ({ onSuccess }: VideoEmbedProps) => {
         setEmbedVideo(embedVideo);
         onSuccess(embedVideo);
       } else {
-        setEmbeder(undefined);
+        setEmbedder(undefined);
         onSuccess();
       }
     }
