@@ -23,7 +23,7 @@ const VideoEmbed = ({ onSuccess }: VideoEmbedProps) => {
   const { t } = useTranslation();
   const [url, setUrl] = useState<string>();
   const [embedVideo, setEmbedVideo] = useState<string>();
-  const [embedder, setEmbeder] = useState<Embedder | undefined>(undefined);
+  const [embedder, setEmbedder] = useState<Embedder | undefined>(undefined);
   const debounceChangeUrl = useDebounce<string>(url || "", 300);
   const [whiteListProvider, setWhiteListProvider] = useState<Embedder[]>();
   const { switchType } = useMediaLibraryContext();
