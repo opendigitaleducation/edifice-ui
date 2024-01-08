@@ -11,18 +11,7 @@ import { SpeechRecognition } from "@edifice-tiptap-extensions/extension-speechre
 import SpeechSynthesis from "@edifice-tiptap-extensions/extension-speechsynthesis";
 import { TableCell } from "@edifice-tiptap-extensions/extension-table-cell";
 import { TypoSize } from "@edifice-tiptap-extensions/extension-typosize";
-import {
-  useOdeClient,
-  MediaRenderer,
-  AttachmentRenderer,
-  AttachmentNodeView,
-  ImageNodeView,
-  VideoNodeView,
-  AudioNodeView,
-  AudioRenderer,
-  LinkerNodeView,
-  LinkerRenderer,
-} from "@edifice-ui/react";
+import { useOdeClient } from "@edifice-ui/react";
 import Color from "@tiptap/extension-color";
 import FontFamily from "@tiptap/extension-font-family";
 import Highlight from "@tiptap/extension-highlight";
@@ -39,6 +28,17 @@ import { useEditor, Content } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 // eslint-disable-next-line import/order
 import { Mathematics } from "@tiptap-pro/extension-mathematics";
+import {
+  AttachmentNodeView,
+  AttachmentRenderer,
+  AudioNodeView,
+  AudioRenderer,
+  ImageNodeView,
+  LinkerNodeView,
+  LinkerRenderer,
+  MediaRenderer,
+  VideoNodeView,
+} from "../components";
 
 /**
  * Hook that creates a tiptap editor instance,

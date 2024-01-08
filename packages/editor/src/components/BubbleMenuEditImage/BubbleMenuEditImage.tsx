@@ -4,10 +4,9 @@ import {
   ImageSizeSmall,
   Wand,
 } from "@edifice-ui/icons";
+import { Button, IconButton } from "@edifice-ui/react";
 import { Editor } from "@tiptap/react";
 import { useTranslation } from "react-i18next";
-
-import { Button, IconButton } from "../../components";
 
 interface ButtonSize {
   icon: JSX.Element;

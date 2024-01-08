@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { Edit, ExternalLink, Unlink } from "@edifice-ui/icons";
+import { Toolbar, ToolbarItem } from "@edifice-ui/react";
 import { FloatingMenu, Editor } from "@tiptap/react";
 import { useTranslation } from "react-i18next";
 
 import { tippyOptions } from "./LinkToolbar.TippyOptions";
-import { Toolbar, ToolbarItem } from "../../components";
 
 interface LinkToolbarProps {
   /**

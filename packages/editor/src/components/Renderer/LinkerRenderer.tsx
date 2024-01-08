@@ -1,10 +1,8 @@
 import { MouseEventHandler } from "react";
 
+import { AppIcon, Badge, useOdeIcons } from "@edifice-ui/react";
 import { Editor, NodeViewWrapper } from "@tiptap/react";
 import clsx from "clsx";
-
-import { AppIcon, Badge } from "../../components";
-import { useOdeIcons } from "../../core";
 
 interface LinkerProps {
   selected: boolean;

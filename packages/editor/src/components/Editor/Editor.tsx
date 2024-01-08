@@ -1,15 +1,7 @@
 import { Suspense, lazy, forwardRef, useImperativeHandle, Ref } from "react";
 
 import "@edifice-tiptap-extensions/extension-image";
-import {
-  LoadingScreen,
-  MediaLibrary,
-  useOdeClient,
-  BubbleMenuEditImage,
-  TableToolbar,
-  LinkToolbar,
-  TiptapWrapper,
-} from "@edifice-ui/react";
+import { LoadingScreen, MediaLibrary, useOdeClient } from "@edifice-ui/react";
 import { BubbleMenu, EditorContent, Content, JSONContent } from "@tiptap/react";
 
 import {
@@ -21,6 +13,9 @@ import {
   useMediaLibraryModal,
   useSpeechSynthetisis,
   useTipTapEditor,
+  LinkToolbar,
+  TableToolbar,
+  BubbleMenuEditImage,
 } from "../..";
 
 //-------- LAZY IMPORTS --------//
@@ -36,10 +31,9 @@ const KatexStyles = lazy(async () => {
   const katex = await import("../../styles/katex.scss");
   return { default: () => <style>{katex.default}</style> };
 });
-const MathsModal = lazy(async () => {
-  const module = await import("@edifice-ui/react");
-  return { default: module.MathsModal };
-});
+
+const MathsModal = lazy(async () => await import("./MathsModal"));
+
 const ImageEditor = lazy(async () => {
   const module = await import("@edifice-ui/react");
   return { default: module.ImageEditor };
@@ -113,7 +107,7 @@ const Editor = forwardRef(
           editor,
         }}
       >
-        <TiptapWrapper>
+        <div className="border rounded">
           {toolbar !== "none" && editable && (
             <EditorToolbar
               {...{
@@ -128,7 +122,7 @@ const Editor = forwardRef(
             id="editorContent"
             className="py-12 px-16"
           />
-        </TiptapWrapper>
+        </div>
 
         <LinkToolbar editor={editor} {...linkToolbarHandlers} />
 

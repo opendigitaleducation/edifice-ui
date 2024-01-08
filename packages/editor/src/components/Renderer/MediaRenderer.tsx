@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useRef } from "react";
 
+import { Image } from "@edifice-ui/react";
 import { NodeViewWrapper } from "@tiptap/react";
 
-import { Image } from "../../components";
-import { MediaResizeProps, useResizeMedia } from "../../hooks/useResizeMedia";
+import { MediaResizeProps, useResizeMedia } from "../../hooks";
 
 const MediaRenderer = (props: MediaResizeProps) => {
   const { node } = props;

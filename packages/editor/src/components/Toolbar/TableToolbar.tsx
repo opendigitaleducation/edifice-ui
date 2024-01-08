@@ -1,6 +1,7 @@
 import { RefAttributes, useEffect, useMemo, useState } from "react";
 
 import { MergeCells, SplitCells } from "@edifice-ui/icons";
+import { IconButtonProps, Toolbar } from "@edifice-ui/react";
 import {
   FloatingMenu,
   FloatingMenuProps,
@@ -12,7 +13,6 @@ import { useTranslation } from "react-i18next";
 import { TableToolbarAddMenu } from "./TableToolbar.AddMenu";
 import { TableToolbarCellColor } from "./TableToolbar.CellColor";
 import { TableToolbarDelMenu } from "./TableToolbar.DelMenu";
-import { IconButtonProps, Toolbar } from "../../components";
 
 interface TableToolbarProps {
   /**

@@ -294,24 +294,6 @@ importers:
 
   packages/react:
     dependencies:
-      '@edifice-tiptap-extensions/extension-attachment':
-        specifier: develop-b2school
-        version: 1.0.0-develop-b2school.2(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
-      '@edifice-tiptap-extensions/extension-audio':
-        specifier: develop-b2school
-        version: 1.0.0-develop-b2school.1(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
-      '@edifice-tiptap-extensions/extension-image':
-        specifier: develop-b2school
-        version: 1.0.0-develop-b2school.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
-      '@edifice-tiptap-extensions/extension-linker':
-        specifier: develop-b2school
-        version: 1.0.0-develop-b2school.3(@tiptap/core@2.0.3)(@tiptap/extension-link@2.0.3)(@tiptap/pm@2.0.3)
-      '@edifice-tiptap-extensions/extension-table-cell':
-        specifier: develop-b2school
-        version: 1.0.0-develop-b2school.2(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
-      '@edifice-tiptap-extensions/extension-video':
-        specifier: develop-b2school
-        version: 1.0.0-develop-b2school.4(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
       '@floating-ui/react':
         specifier: 0.26.0
         version: 0.26.0(react-dom@18.2.0)(react@18.2.0)
@@ -321,36 +303,6 @@ importers:
       '@popperjs/core':
         specifier: 2.11.8
         version: 2.11.8
-      '@tiptap-pro/extension-mathematics':
-        specifier: 2.2.1
-        version: 2.2.1(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)(katex@0.16.8)
-      '@tiptap/extension-color':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/extension-text-style@2.0.3)
-      '@tiptap/extension-highlight':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-image':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-table':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)(@tiptap/pm@2.0.3)
-      '@tiptap/extension-table-cell':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-table-header':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-table-row':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-text-style':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
-      '@tiptap/extension-underline':
-        specifier: 2.0.3
-        version: 2.0.3(@tiptap/core@2.0.3)
       '@tiptap/pm':
         specifier: 2.0.3
         version: 2.0.3(@tiptap/core@2.0.3)

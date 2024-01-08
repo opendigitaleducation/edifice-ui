@@ -1,10 +1,9 @@
 import { useState } from "react";
 
 import { Delete, Download } from "@edifice-ui/icons";
+import { Attachment, Grid, IconButton } from "@edifice-ui/react";
 import { Editor, NodeViewWrapper } from "@tiptap/react";
 import { useTranslation } from "react-i18next";
-
-import { Attachment, Grid, IconButton } from "../../components";
 
 interface AttachmentProps {
   editor: Editor;

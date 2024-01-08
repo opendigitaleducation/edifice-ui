@@ -6,10 +6,9 @@ import {
   HighlightColumn,
   HighlightRow,
 } from "@edifice-ui/icons";
+import { Dropdown } from "@edifice-ui/react";
 import { Editor } from "@tiptap/react";
 import { useTranslation } from "react-i18next";
-
-import { Dropdown } from "../../components";
 
 interface Props {
   /**

@@ -1,11 +1,9 @@
 import { useState } from "react";
 
-import {
-  useImageSelection,
-  useToggle,
-  useWorkspaceFile,
-} from "@edifice-ui/react";
+import { useToggle, useWorkspaceFile } from "@edifice-ui/react";
 import { Editor } from "@tiptap/react";
+
+import { useImageSelection } from "./useImageSelection";
 
 type EditedImage = { src: string; alt?: string; title?: string } | undefined;
 

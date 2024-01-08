@@ -1,15 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { Editor } from "@tiptap/react";
-import { useTranslation } from "react-i18next";
-
 import {
   ColorPalette,
   ColorPicker,
   ColorPickerItem,
+  DefaultPalette,
   Dropdown,
-} from "../../components";
-import { DefaultPalette } from "../../components/ColorPicker";
+} from "@edifice-ui/react";
+import { Editor } from "@tiptap/react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   /**

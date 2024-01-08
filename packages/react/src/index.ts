@@ -4,6 +4,5 @@ export * from "./explorer";
 export * from "./hooks";
 export * from "./portal";
 export * from "./widgets";
-export * from "./tiptap";
 export * from "./utils";
 export * from "./multimedia";

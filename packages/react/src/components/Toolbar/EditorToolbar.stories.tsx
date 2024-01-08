@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import Toolbar from "../../components/Toolbar/Toolbar";
+import { Toolbar, IconButtonProps, IconButton, Dropdown } from "..";
 import {
   AlignLeft,
   Paperclip,
@@ -19,7 +19,6 @@ import {
   TextUnderline,
 } from "@edifice-ui/icons";
 import { RefAttributes } from "react";
-import { IconButtonProps, IconButton, Dropdown } from "../../components";
 
 const meta: Meta<typeof Toolbar> = {
   title: "Tiptap/EditorToolbar",
