@@ -21,7 +21,7 @@ export const useResizeMedia = (
 
   const proseMirrorContainerWidth = useRef(0);
 
-  const limitWidthOrHeight = (width: number) => width < 250;
+  const limitWidthOrHeight = (width: number) => width < 125;
 
   useEffect(() => {
     const proseMirrorContainerDiv = document.querySelector(".ProseMirror");

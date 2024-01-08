@@ -23,10 +23,12 @@ export const InternalLink = ({
   appPrefix,
 }: InternalLinkTabProps) => {
   const { t } = useTranslation();
-  const { setResult, setResultCounter, appCode } = useMediaLibraryContext();
+  const { setResult, setResultCounter, appCode, setPreSuccess } =
+    useMediaLibraryContext();
   const [isChecked, toggleChecked] = useToggle(target === "_blank");
 
   const handleSelect = (resources: ILinkedResource[]) => {
+    setPreSuccess(undefined);
     setResult({
       target: isChecked ? "_blank" : undefined,
       resources,

@@ -2,12 +2,13 @@ import ExternalLinker, { IExternalLink } from "../../Linker/ExternalLinker";
 import { useMediaLibraryContext } from "../MediaLibraryContext";
 
 export const ExternalLink = (link?: IExternalLink) => {
-  const { setResult } = useMediaLibraryContext();
+  const { setResult, setPreSuccess } = useMediaLibraryContext();
 
   const handleLinkChange = (
     { url, text, target }: IExternalLink,
     isValidLink: boolean,
   ) => {
+    setPreSuccess(undefined);
     if (isValidLink) {
       setResult({
         url,

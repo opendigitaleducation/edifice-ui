@@ -24,6 +24,7 @@ import {
   LinkerRenderer,
 } from "@edifice-ui/react";
 import Color from "@tiptap/extension-color";
+import Focus from "@tiptap/extension-focus";
 import FontFamily from "@tiptap/extension-font-family";
 import Highlight from "@tiptap/extension-highlight";
 import Subscript from "@tiptap/extension-subscript";
@@ -60,6 +61,10 @@ export const useTipTapEditor = (editable: boolean, content: Content) => {
       Underline,
       TextStyle,
       Color,
+      Focus.configure({
+        className: "has-focus",
+        mode: "all",
+      }),
       Subscript,
       Superscript,
       Table.configure({

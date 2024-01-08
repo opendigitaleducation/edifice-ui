@@ -23,9 +23,11 @@ const acceptedTypes = (type: MediaLibraryType) => {
 };
 
 export const Upload = () => {
-  const { type, setResult, setResultCounter } = useMediaLibraryContext();
+  const { type, setResult, setResultCounter, setPreSuccess } =
+    useMediaLibraryContext();
 
   const handleOnFilesChange = (uploadedFiles: WorkspaceElement[]) => {
+    setPreSuccess(undefined);
     if (uploadedFiles.length) {
       setResultCounter(uploadedFiles.length);
       setResult(uploadedFiles);
