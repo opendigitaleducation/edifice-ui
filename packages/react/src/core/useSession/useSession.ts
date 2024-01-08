@@ -5,6 +5,7 @@ export default function useSession() {
   return useQuery<IGetSession>({
     queryKey: ["session"],
     queryFn: async () => await odeServices.session().getSession(),
-    suspense: true,
+    /* staleTime: 20 * (60 * 1000),
+    gcTime: 30 * (60 * 1000), */
   });
 }

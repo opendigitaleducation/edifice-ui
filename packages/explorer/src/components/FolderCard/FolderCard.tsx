@@ -1,7 +1,6 @@
 import { Files } from "@edifice-ui/icons";
+import { CardProps, Card } from "@edifice-ui/react";
 import { IWebApp } from "edifice-ts-client";
-
-import { Card, CardProps } from "../../components";
 
 export interface FolderCardProps extends Omit<CardProps, "children"> {
   /**

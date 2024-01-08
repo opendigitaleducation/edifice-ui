@@ -1,16 +1,15 @@
 import { Globe, Users } from "@edifice-ui/icons";
 import { OneProfile } from "@edifice-ui/icons/nav";
-import { IResource, IWebApp } from "edifice-ts-client";
-import { useTranslation } from "react-i18next";
-
 import {
+  CardProps,
+  Card,
   AppIcon,
   Avatar,
-  Card,
-  CardProps,
-  Image,
   Tooltip,
-} from "../../components";
+  Image,
+} from "@edifice-ui/react";
+import { IResource, IWebApp } from "edifice-ts-client";
+import { useTranslation } from "react-i18next";
 
 type OmitChildren = Omit<CardProps, "children">;
 
@@ -90,13 +89,7 @@ const ResourceCard = ({
             </div>
           </Card.Body>
           <Card.Footer>
-            <div
-              className="
-      d-inline-flex
-      align-items-center
-      gap-8
-      text-truncate"
-            >
+            <div className="d-inline-flex align-items-center gap-8 text-truncate">
               {avatar ? (
                 <Avatar
                   alt={resource?.creatorName || ""}

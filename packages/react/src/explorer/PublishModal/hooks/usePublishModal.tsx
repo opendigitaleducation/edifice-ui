@@ -9,9 +9,9 @@ import { type SubmitHandler, useForm } from "react-hook-form";
 
 import { useOdeClient } from "../../../core";
 import { useToast } from "../../../hooks";
+import { libraryMaps } from "../../../utils/libraryMaps";
 import { ToastError } from "../components/ToastError";
 import { ToastSuccess } from "../components/ToastSuccess";
-import { libraryMaps } from "../constants/libraryMaps";
 
 interface ModalProps {
   resource: IResource;
