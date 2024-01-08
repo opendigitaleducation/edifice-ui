@@ -3,7 +3,8 @@ import { useState, useId, useCallback, useMemo } from "react";
 import { IUserInfo, odeServices } from "edifice-ts-client";
 import { useTranslation } from "react-i18next";
 
-import { useTitle, useHover } from "../../hooks";
+import { useOdeClient } from "..";
+import { useHover } from "../../hooks";
 import { useBookmark } from "../useBookmark";
 import { useHasWorkflow } from "../useHasWorkflow";
 
@@ -14,12 +15,13 @@ export default function useHeader({
   user: IUserInfo | undefined;
   avatar: string;
 }): any {
+  const { appCode } = useOdeClient();
   const { t } = useTranslation();
 
   /**
    * Get document title for responsive usage
    */
-  const title = useTitle();
+  const title = t(appCode);
 
   /**
    * Collapse helper for Responsive
