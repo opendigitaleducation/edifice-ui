@@ -12,12 +12,13 @@ import {
 
 export function ExplorerBreadcrumb() {
   const { appCode } = useOdeClient();
+  const { gotoPreviousFolder } = useStoreActions();
+  const { t } = useTranslation();
+  const { inputSearch } = useSearchForm();
+
   const selectedNodesIds = useSelectedNodesIds();
   const isTrashFolder = useIsTrash();
   const currentFolder = useCurrentFolder();
-  const { t } = useTranslation(["common", appCode]);
-  const { gotoPreviousFolder } = useStoreActions();
-  const { inputSearch } = useSearchForm();
 
   const trashName: string = t("explorer.tree.trash");
   const searchName: string = t("explorer.tree.search");

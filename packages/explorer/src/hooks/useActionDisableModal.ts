@@ -2,6 +2,7 @@ import { useResourceActionDisable, useStoreActions } from "~/store";
 
 export const useActionDisableModal = () => {
   const isActionDisableModalOpen = useResourceActionDisable();
+
   const { clearSelectedIds, setResourceActionDisable, clearSelectedItems } =
     useStoreActions();
 

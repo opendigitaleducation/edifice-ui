@@ -1,6 +1,13 @@
 import { Globe, Users } from "@edifice-ui/icons";
 import { OneProfile } from "@edifice-ui/icons/nav";
-import { CardProps, Card, AppIcon, Avatar, Tooltip } from "@edifice-ui/react";
+import {
+  CardProps,
+  Card,
+  AppIcon,
+  Avatar,
+  Tooltip,
+  Image,
+} from "@edifice-ui/react";
 import { IResource, IWebApp } from "edifice-ts-client";
 import { useTranslation } from "react-i18next";
 
@@ -82,13 +89,7 @@ const ResourceCard = ({
             </div>
           </Card.Body>
           <Card.Footer>
-            <div
-              className="
-      d-inline-flex
-      align-items-center
-      gap-8
-      text-truncate"
-            >
+            <div className="d-inline-flex align-items-center gap-8 text-truncate">
               {avatar ? (
                 <Avatar
                   alt={resource?.creatorName || ""}

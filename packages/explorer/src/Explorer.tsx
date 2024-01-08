@@ -7,22 +7,19 @@ import {
   LoadingScreen,
   Breadcrumb,
   AppHeader,
+  isActionAvailable,
 } from "@edifice-ui/react";
-import { type IAction } from "edifice-ts-client";
 import { IWebApp } from "edifice-ts-client";
 
-// import OnboardingModal from "./components/OnboardingModal/OnboardingModal";
-import { ExplorerBreadcrumb } from "~/components/ExplorerBreadcrumb";
-import { useLibraryUrl } from "~/features/Explorer/components/Library/useLibraryUrl";
+import { ExplorerBreadcrumb } from "./components/ExplorerBreadcrumb";
+import { AppParams } from "./utils/getAppParams";
 import { List } from "~/features/Explorer/components/List/List";
-// import ActionResourceDisableModal from "~/features/Explorer/components/ResourcesList/ActionResourceDisableModal";
 import { SearchForm } from "~/features/Explorer/components/SearchForm/SearchForm";
 import { TreeViewContainer } from "~/features/TreeView/components/TreeViewContainer";
 import { useActionDisableModal } from "~/hooks/useActionDisableModal";
 import { useTrashModal } from "~/hooks/useTrashedModal";
 import { useActions } from "~/services/queries";
-import { useStoreActions } from "~/store";
-import { isActionAvailable } from "~/utils/isActionAvailable";
+import { useSearchParams, useStoreActions } from "~/store";
 
 import "node_modules/@edifice-ui/react/dist/style.css";
 
@@ -30,9 +27,11 @@ const AppAction = lazy(
   async () =>
     await import("~/features/Explorer/components/AppAction/AppAction"),
 );
-const OnboardingModal = lazy(
-  async () => await import("./components/OnboardingModal/OnboardingModal"),
-);
+
+const OnboardingModal = lazy(async () => {
+  const module = await import("@edifice-ui/react");
+  return { default: module.OnboardingModal };
+});
 
 const Library = lazy(
   async () => await import("~/features/Explorer/components/Library/Library"),
@@ -43,44 +42,44 @@ const ActionBar = lazy(
     await import("~/features/Actionbar/components/ActionBarContainer"),
 );
 const ActionResourceDisableModal = lazy(
-  async () =>
-    await import(
-      "~/features/Explorer/components/ResourcesList/ActionResourceDisableModal"
-    ),
+  async () => await import("~/components/ActionResourceDisableModal"),
 );
 
 const TrashedResourceModal = lazy(
-  async () =>
-    await import(
-      "~/features/Explorer/components/ResourcesList/TrashedResourceModal"
-    ),
+  async () => await import("~/components/TrashedResourceModal"),
 );
 
-const Explorer = ({ config }: { config: any }) => {
-  const { setConfig } = useStoreActions();
+const Explorer = ({ config }: { config: AppParams }) => {
+  const searchParams = useSearchParams();
+  const { setConfig, setSearchParams } = useStoreActions();
 
   useEffect(() => {
-    setConfig(config);
-  }, [config, setConfig]);
+    setConfig(config || {});
+    setSearchParams({
+      ...searchParams,
+      app: config.app,
+      types: config.types,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config]);
 
   const { currentApp } = useOdeClient();
   const { data: actions } = useActions();
   const { isTrashedModalOpen, onTrashedCancel } = useTrashModal();
   const { isActionDisableModalOpen, onActionDisableCancel } =
     useActionDisableModal();
-  const { libraryUrl } = useLibraryUrl();
 
   useXitiTrackPageLoad();
 
-  const canPublish =
-    config && actions?.find((action: IAction) => action.id === "publish");
+  const canPublish = isActionAvailable("publish", actions);
+  const canCreate = isActionAvailable("create", actions);
 
   return (
     config && (
       <>
         <AppHeader
           render={() =>
-            isActionAvailable({ workflow: "create", actions }) ? (
+            canCreate ? (
               <Suspense fallback={<LoadingScreen />}>
                 <AppAction />
               </Suspense>
@@ -98,12 +97,10 @@ const Explorer = ({ config }: { config: any }) => {
             className="border-end pt-16 pe-16 d-none d-lg-block"
             as="aside"
           >
-            <TreeViewContainer />
-            {canPublish?.available && libraryUrl && (
-              <Suspense fallback={<LoadingScreen />}>
-                <Library url={libraryUrl} />
-              </Suspense>
-            )}
+            <Suspense fallback={<LoadingScreen />}>
+              <TreeViewContainer />
+              {canPublish && <Library />}
+            </Suspense>
           </Grid.Col>
           <Grid.Col sm="4" md="8" lg="6" xl="9">
             <SearchForm />
@@ -138,28 +135,25 @@ const Explorer = ({ config }: { config: any }) => {
                 closeText: "explorer.modal.onboarding.trash.close",
               }}
             />
-          </Suspense>
-
-          {isTrashedModalOpen && (
-            <Suspense fallback={<LoadingScreen />}>
+            {isTrashedModalOpen && (
               <TrashedResourceModal
                 isOpen={isTrashedModalOpen}
                 onCancel={onTrashedCancel}
               />
-            </Suspense>
-          )}
-          {isActionDisableModalOpen && (
-            <Suspense fallback={<LoadingScreen />}>
+            )}
+            {isActionDisableModalOpen && (
               <ActionResourceDisableModal
                 isOpen={isActionDisableModalOpen}
                 onCancel={onActionDisableCancel}
               />
-            </Suspense>
-          )}
+            )}
+          </Suspense>
         </Grid>
       </>
     )
   );
+
+  // return config ? <AppExplorer /> : null;
 };
 
 export default Explorer;

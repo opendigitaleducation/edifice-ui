@@ -1,9 +1,9 @@
-import { useOdeClient } from "@edifice-ui/react";
 import { IUserInfo } from "edifice-ts-client";
 
-import { libraryMaps } from "~/constants";
+import { libraryMaps } from "../../utils/libraryMaps";
+import { useOdeClient } from "../OdeClientProvider/OdeClientProvider";
 
-export const useLibraryUrl = () => {
+const useLibraryUrl = () => {
   const { user, appCode } = useOdeClient();
 
   const appName = libraryMaps[appCode as string];
@@ -33,3 +33,5 @@ export const useLibraryUrl = () => {
 
   return { libraryUrl };
 };
+
+export default useLibraryUrl;

@@ -1,12 +1,13 @@
 import React, { useCallback } from "react";
 
-import { Button, ResourceCard, useOdeClient } from "@edifice-ui/react";
+import { Button, useOdeClient } from "@edifice-ui/react";
 import { useSpring, animated } from "@react-spring/web";
 import { InfiniteData } from "@tanstack/react-query";
 import clsx from "clsx";
 import { type ID, type IResource, ISearchResults } from "edifice-ts-client";
 import { useTranslation } from "react-i18next";
 
+import { ResourceCard } from "~/components/ResourceCard";
 import { dayjs } from "~/config";
 import {
   useStoreActions,

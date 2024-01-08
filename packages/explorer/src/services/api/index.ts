@@ -19,12 +19,10 @@ import {
  * @param searchParams
  * @returns resources, no trashed folders and pagination
  */
-export const searchContext = async (searchParams: any) => {
-  console.log({ searchParams });
-  const search = await odeServices.resource("blog").searchContext(searchParams);
-
-  console.log("search", { search });
-  console.log("here");
+export const searchContext = async (searchParams: ISearchParameters) => {
+  const search = await odeServices
+    .resource(searchParams.app)
+    .searchContext(searchParams);
 
   return {
     ...search,
@@ -243,7 +241,9 @@ export const goToResource = ({
 }: {
   searchParams: ISearchParameters;
   assetId: ID;
-}) => odeServices.resource(searchParams.app).gotoView(assetId);
+}) => {
+  return odeServices.resource(searchParams.app).gotoView(assetId);
+};
 
 export const createResource = ({
   searchParams,
@@ -266,14 +266,6 @@ export const printResource = ({
   const result = odeServices.resource(searchParams.app).gotoPrint(assetId);
   return result;
 };
-
-/* export const publishResource = async ({
-  app,
-  params,
-}: {
-  app: App;
-  params: PublishParameters;
-}) => await odeServices.resource(app).publish(params); */
 
 /**
  * getPreference API

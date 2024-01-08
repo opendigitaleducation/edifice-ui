@@ -13,14 +13,11 @@ import {
   type IResource,
   type ShareRight,
   type UpdateParameters,
-  FOLDER,
   IAction,
   CreateParameters,
 } from "edifice-ts-client";
 import { t } from "i18next";
-import { useTranslation } from "react-i18next";
 
-import { TreeNodeFolderWrapper } from "~/features/Explorer/adapters";
 import {
   createFolder,
   createResource,
@@ -38,7 +35,6 @@ import {
   useStoreActions,
   useSearchParams,
   useFolderIds,
-  useCurrentFolder,
   useTreeData,
   useResourceAssetIds,
   useResourceIds,
@@ -47,12 +43,8 @@ import {
 } from "~/store";
 import { addNode } from "~/utils/addNode";
 import { deleteNode } from "~/utils/deleteNode";
-// import { getAppParams } from "~/utils/getAppParams";
 import { moveNode } from "~/utils/moveNode";
 import { updateNode } from "~/utils/updateNode";
-import { wrapTreeNode } from "~/utils/wrapTreeNode";
-
-// const { actions, app } = explorerConfig;
 
 /**
  * useActions query
@@ -61,6 +53,7 @@ import { wrapTreeNode } from "~/utils/wrapTreeNode";
  */
 export const useActions = () => {
   const config = useStoreContext((state) => state.config);
+
   return useQuery<Record<string, boolean>, Error, IAction[]>({
     queryKey: ["actions"],
     queryFn: async () => {
@@ -74,6 +67,8 @@ export const useActions = () => {
         available: data[action.workflow],
       }));
     },
+    staleTime: Infinity,
+    enabled: !!config,
   });
 };
 
@@ -83,16 +78,8 @@ export const useActions = () => {
  * @returns infinite query to load resources
  */
 export const useSearchContext = () => {
-  const queryClient = useQueryClient();
   const config = useStoreContext((state) => state.config);
   const searchParams = useSearchParams();
-  const currentFolder = useCurrentFolder();
-  const treeData = useTreeData();
-  const toast = useToast();
-
-  const { appCode } = useOdeClient();
-  const { t } = useTranslation();
-  const { setTreeData, setSearchParams, setSearchConfig } = useStoreActions();
   const { filters, trashed, search } = searchParams;
 
   const queryKey = [
@@ -107,57 +94,26 @@ export const useSearchContext = () => {
 
   return useInfiniteQuery({
     queryKey,
-    queryFn: async ({ pageParam = 0 }) => {
+    queryFn: async ({ pageParam }) => {
+      console.log({ config });
       return await searchContext({
         ...searchParams,
-        app: config,
-        types: config.types,
+        app: config?.app,
+        types: config?.types,
         pagination: {
           ...searchParams.pagination,
           startIdx: pageParam,
         },
       });
     },
+    initialPageParam: 0,
     enabled: !!config,
-    onError(error) {
-      if (typeof error === "string") toast.error(t(error));
-    },
-    onSuccess: async (data) => {
-      await queryClient.cancelQueries({ queryKey });
-      // copy folders
-      const folders: IFolder[] = [...(data?.pages[0]?.folders ?? [])];
-      if (data?.pages[0]?.searchConfig) {
-        setSearchConfig(data.pages[0].searchConfig);
-      }
-      if (!searchParams.search) {
-        // set tree data only if we are not searching
-        if (currentFolder?.id === "default") {
-          setTreeData({
-            id: FOLDER.DEFAULT,
-            section: true,
-            children: folders.map(
-              (folder: IFolder) => new TreeNodeFolderWrapper(folder),
-            ),
-            name: t("explorer.filters.mine", { ns: appCode }),
-          });
-        } else {
-          setTreeData(
-            wrapTreeNode(
-              treeData,
-              folders,
-              searchParams.filters.folder || FOLDER.DEFAULT,
-            ),
-          );
-        }
-      }
-      setSearchParams({
-        ...searchParams,
-        pagination: data?.pages[data?.pages.length - 1]?.pagination,
-      });
-    },
     retry: false,
-    getNextPageParam: (lastPage) =>
-      lastPage.pagination.startIdx + lastPage.pagination.pageSize ?? undefined,
+    getNextPageParam: (lastPage) => {
+      return (
+        lastPage.pagination.startIdx + lastPage.pagination.pageSize ?? undefined
+      );
+    },
   });
 };
 
@@ -813,7 +769,7 @@ export const useUpdateResource = () => {
   });
 };
 
-const useCreateResourceBase = (
+/* const useCreateResourceBase = (
   onSuccess:
     | ((
         data: CreateResult,
@@ -833,7 +789,7 @@ const useCreateResourceBase = (
     },
     onSuccess,
   });
-};
+}; */
 
 export const useCreateResource = () => {
   const toast = useToast();

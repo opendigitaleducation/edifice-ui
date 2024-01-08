@@ -8,6 +8,7 @@ import {
   type IResource,
   type ID,
   type ISearchResults,
+  App,
 } from "edifice-ts-client";
 import { t } from "i18next";
 import { create } from "zustand";
@@ -23,7 +24,7 @@ import { wrapTreeNode } from "~/utils/wrapTreeNode";
 // const { app, types, filters, orders } = explorerConfig;
 
 interface State {
-  config: any;
+  config: any | null;
   searchParams: ISearchParameters;
   treeData: TreeNode;
   selectedNodesIds: string[];
@@ -74,8 +75,8 @@ export const useStoreContext = create<State>()((set, get) => ({
   config: null,
   searchConfig: { minLength: 1 },
   searchParams: {
-    app: "blog",
-    types: ["blog"],
+    app: "" as App,
+    types: [],
     filters: {
       folder: "default",
       owner: undefined,

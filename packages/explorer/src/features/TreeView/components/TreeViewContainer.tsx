@@ -5,6 +5,7 @@ import {
   Button,
   LoadingScreen,
   TreeView,
+  useOdeClient,
   // useHasWorkflow,
   useToggle,
 } from "@edifice-ui/react";
@@ -20,20 +21,22 @@ import {
   useTreeData,
 } from "~/store";
 
-const CreateModal = lazy(
-  async () => await import("../../Actionbar/components/EditFolderModal"),
+const CreateFolderModal = lazy(
+  async () => await import("../../Actionbar/components/FolderModal"),
 );
 
 export const TreeViewContainer = () => {
   const queryclient = useQueryClient();
-  const { t } = useTranslation();
 
-  const [isCreateFolderModalOpen, toggle] = useToggle();
+  const [isModalOpen, toggle] = useToggle();
   // * https://github.com/pmndrs/zustand#fetching-everything
   // ! https://github.com/pmndrs/zustand/discussions/913
   const treeData = useTreeData();
   const isTrashFolder = useIsTrash();
   const selectedNodesIds = useSelectedNodesIds();
+  const { appCode } = useOdeClient();
+  const { t } = useTranslation(["common", appCode]);
+
   const {
     goToTrash,
     selectTreeItem,
@@ -42,10 +45,6 @@ export const TreeViewContainer = () => {
     clearSelectedItems,
     clearSelectedIds,
   } = useStoreActions();
-
-  /* const canCreateFolder = useHasWorkflow(
-    "org.entcore.blog.controllers.FoldersController|add",
-  ); */
 
   const handleTreeItemUnfold = async (folderId: ID) => {
     await unfoldTreeItem(folderId, queryclient);
@@ -57,7 +56,7 @@ export const TreeViewContainer = () => {
     toggle();
   };
 
-  return treeData ? (
+  return (
     <>
       <TreeView
         data={treeData}
@@ -84,15 +83,16 @@ export const TreeViewContainer = () => {
         </Button>
       </div>
       <Suspense fallback={<LoadingScreen />}>
-        {isCreateFolderModalOpen && (
-          <CreateModal
+        {isModalOpen && (
+          <CreateFolderModal
             edit={false}
-            isOpen={isCreateFolderModalOpen}
+            isOpen={isModalOpen}
             onSuccess={toggle}
             onCancel={toggle}
           />
         )}
       </Suspense>
     </>
-  ) : null;
+  );
+  // ) : null;
 };

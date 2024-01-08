@@ -13,10 +13,10 @@ import { useTranslation } from "react-i18next";
 import { useActions, useCreateResource } from "~/services/queries";
 import { useCurrentFolder, useStoreActions } from "~/store";
 
-const CreateModal = lazy(
-  async () =>
-    await import("../../../../components/ResourceModal/ResourceModal"),
-);
+const CreateModal = lazy(async () => {
+  const module = await import("@edifice-ui/react");
+  return { default: module.ResourceModal };
+});
 
 export default function AppAction() {
   const [isCreateResourceOpen, toggle] = useToggle();

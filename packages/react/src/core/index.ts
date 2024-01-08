@@ -6,6 +6,7 @@ export * from "./useConversation";
 export * from "./useHasWorkflow";
 export * from "./useHeader";
 export * from "./useIsAdml";
+export * from "./useLibraryUrl";
 export * from "./useOdeIcons";
 export * from "./usePaths";
 export * from "./useSession";

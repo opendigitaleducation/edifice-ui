@@ -16,9 +16,9 @@ export default defineConfig({
     minify: false,
     lib: {
       entry: {
-        index: resolve(__dirname, "src/index.tsx"),
+        index: resolve(__dirname, "src/index.ts"),
       },
-      formats: ["es", "cjs"],
+      formats: ["es"],
     },
     rollupOptions: {
       external: [
@@ -30,6 +30,11 @@ export default defineConfig({
         "edifice-ts-client",
         "@edifice-ui/icons/nav",
       ],
+      output: {
+        entryFileNames: `[name].js`,
+        chunkFileNames: `[name].js`,
+        assetFileNames: `[name].[ext]`,
+      },
     },
   },
   plugins: [
