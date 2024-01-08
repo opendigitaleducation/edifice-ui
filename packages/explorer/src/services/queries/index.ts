@@ -95,7 +95,6 @@ export const useSearchContext = () => {
   return useInfiniteQuery({
     queryKey,
     queryFn: async ({ pageParam }) => {
-      console.log({ config });
       return await searchContext({
         ...searchParams,
         app: config?.app,
